@@ -29,7 +29,11 @@ void Generator::generate(Function & function)
 		function.parameters[i]->accept(this);
 	}
 	
-	std::cout << ")" << std::endl;
+	std::cout << ")" << std::endl << "{" << std::endl;
+	
+	function.block.accept(this);
+	
+	std::cout << "}" << std::endl;
 }
 
 void Generator::generate(IdParameter & parameter)
@@ -45,4 +49,23 @@ void Generator::generate(NumberParameter & parameter)
 void Generator::generate(EpsilonParameter & parameter)
 {
 	
+}
+
+void Generator::generate(Block & block)
+{
+	for (int i = 0; i < block.statements.size(); i++) {
+		std::cout << "    ";
+		
+		if (i == block.statements.size() - 1) {
+			std::cout << "return ";
+		}
+		
+		block.statements[i]->accept(this);
+		std::cout << ";" << std::endl;
+	}
+}
+
+void Generator::generate(Id & id)
+{
+	std::cout << id.name;
 }

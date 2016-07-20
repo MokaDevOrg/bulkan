@@ -13,16 +13,29 @@ public:
 	virtual void accept(Generator * generator) {}
 };
 
-class Statement {};
-class Expression {};
+class Statement {
+public:
+	virtual void accept(Generator * generator) {}
+};
+
+class Expression {
+public:
+	virtual void accept(Generator * generator) {}
+};
 
 class Block
 {
 public:
-	std::vector<Statement> statements;
-	
-	Block(std::vector<Statement> statements) :
+	std::vector<std::shared_ptr<Statement>> statements;
+	bool topLevel = false;
+
+	Block(std::vector<std::shared_ptr<Statement>> statements) :
 		statements(statements) {}
+
+	void accept(Generator * generator)
+	{
+		generator->generate(*this);
+	}
 };
 
 class Function
@@ -33,7 +46,10 @@ public:
 	Block block;
 
 	Function(std::string name, std::vector<std::shared_ptr<Parameter>> parameters, Block block) :
-		name(name), parameters(parameters), block(block) {}
+		name(name), parameters(parameters), block(block)
+	{
+		block.topLevel = true;
+	}
 	
 	void accept(Generator * generator)
 	{
@@ -67,7 +83,6 @@ public:
 	
 	void accept(Generator * generator)
 	{
-		std::cout << "GG";
 		generator->generate(*this);
 	}
 };
@@ -122,10 +137,15 @@ public:
 class ExpressionStatement : public Statement
 {
 public:
-	Expression expression;
+	std::shared_ptr<Expression> expression;
 	
-	ExpressionStatement(Expression expression) :
+	ExpressionStatement(std::shared_ptr<Expression> expression) :
 		expression(expression) {}
+	
+	void accept(Generator * generator)
+	{
+		expression->accept(generator);
+	}
 };
 
 class Number : public Expression
@@ -144,6 +164,11 @@ public:
 	
 	Id(std::string name) :
 		name(name) {}
+	
+	void accept(Generator * generator)
+	{
+		generator->generate(*this);
+	}
 };
 
 class FunctionCall : public Expression

@@ -1,6 +1,6 @@
 func(a, b, c) =
-    let f(x) = x
-    func + 2;
+    a
+    b;
 
 main() =
     f();

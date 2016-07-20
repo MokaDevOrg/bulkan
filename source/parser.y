@@ -26,7 +26,7 @@ void yyerror(const char * str)
 
 	std::vector<std::shared_ptr<Parameter>> * parameterList;
 	std::vector<IdParameter> * idParameterList;
-	std::vector<Statement> * statementList;
+	std::vector<std::shared_ptr<Statement>> * statementList;
 	std::vector<Expression> * expressionList;
 
 	float number;
@@ -118,11 +118,11 @@ epsilon:
 statementList:
 	// empty
 	{
-		$$ = new std::vector<Statement>();
+		$$ = new std::vector<std::shared_ptr<Statement>>();
 	}
 	| statementList statement
 	{
-		$1->push_back(*$2);
+		$1->push_back(std::shared_ptr<Statement>($2));
 	}
 	;
 
@@ -168,7 +168,7 @@ assignment:
 expressionStatement:
 	expression
 	{
-		$$ = new ExpressionStatement(*$1);
+		$$ = new ExpressionStatement(std::shared_ptr<Expression>($1));
 	}
 	;
 

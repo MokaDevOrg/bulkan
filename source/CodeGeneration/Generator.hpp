@@ -9,6 +9,8 @@ class Function;
 class IdParameter;
 class NumberParameter;
 class EpsilonParameter;
+class Block;
+class Id;
 
 
 class Generator
@@ -26,4 +28,8 @@ public:
 	void generate(NumberParameter & parameter);
 	
 	void generate(EpsilonParameter & parameter);
+
+	void generate(Block & block);
+	
+	void generate(Id & id);
 };
