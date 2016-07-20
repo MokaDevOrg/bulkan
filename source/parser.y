@@ -20,13 +20,13 @@ void yyerror(const char * str)
 %union {
 	Function * function;
 	Parameter * parameter;
-	Statement * assignment;
+	Statement * statement;
 	Expression * expression;
-	
+
 	std::vector<Parameter> * parameterList;
 	std::vector<Statement> * statementList;
 	std::vector<Expression> * expressionList;
-	
+
 	float number;
 	std::string * id;
 }
@@ -67,7 +67,7 @@ program:
 function:
 	ID '(' parameterList ')' '=' statementList ';'
 	{
-		$$ = new Function($1, *$3, Block(*$6));
+		$$ = new Function(*$1, *$3, Block(*$6));
 	}
 	;
 
@@ -78,11 +78,11 @@ parameterList:
 	}
 	| parameterList ',' ID
 	{
-		$1->push_back(Id($3));
+		$1->push_back(IdParameter(*$3));
 	}
 	| parameterList ',' NUMBER
 	{
-		$1->push_back(Number($3));
+		$1->push_back(NumberParameter($3));
 	}
 	| parameterList ',' epsilon
 	{
@@ -91,7 +91,7 @@ parameterList:
 	| ID
 	{
 		$$ = new std::vector<Parameter>();
-		$$->push_back(IdParameter($1));
+		$$->push_back(IdParameter(*$1));
 	}
 	| NUMBER
 	{
@@ -101,7 +101,7 @@ parameterList:
 	| epsilon
 	{
 		$$ = new std::vector<Parameter>();
-		$$->push_back($1);
+		$$->push_back(*$1);
 	}
 	;
 
