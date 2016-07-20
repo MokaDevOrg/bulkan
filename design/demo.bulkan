@@ -5,4 +5,4 @@ func(a) =
 
 main() = 
 	let b = func(2)
-	log 'the value is: $b $';
+	log 'the value is: $b $b';
