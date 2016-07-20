@@ -1,37 +1,34 @@
 %{
-	#include <iostream>
-	#include <string>
-	#include <vector>
-	
-	#include "ast.hpp"
+#include <iostream>
+#include <string>
+#include <vector>
 
-	int yydebug = 0;
+#include "ast.hpp"
 
-	extern int yylex();
+int yydebug = 0;
 
-	extern std::vector<Function> functions;
+extern int yylex();
 
-	void yyerror(const char * str)
-	{
-		std::cerr << "error: " << str << std::endl;
-	}
+extern std::vector<Function> functions;
+
+void yyerror(const char * str)
+{
+	std::cerr << "error: " << str << std::endl;
+}
 %}
 
-%union SuperUnion {
-	Function function;
-	Parameter parameter;
-	Statement assignment;
-	Expression expression;
+%union {
+	Function * function;
+	Parameter * parameter;
+	Statement * assignment;
+	Expression * expression;
 	
-	std::vector<Parameter> parameterList;
-	std::vector<Statement> statementList;
-	std::vector<Expression> expressionList;
+	std::vector<Parameter> * parameterList;
+	std::vector<Statement> * statementList;
+	std::vector<Expression> * expressionList;
 	
 	float number;
 	std::string * id;
-	
-	SuperUnion() {}
-	~SuperUnion() {}
 }
 
 
@@ -63,66 +60,66 @@ program:
 	// empty
 	| program function
 	{
-		functions.push_back($2);
+		functions.push_back(*$2);
 	}
 	;
 
 function:
 	ID '(' parameterList ')' '=' statementList ';'
 	{
-		$$ = Function($1, $3, Block($6));
+		$$ = new Function($1, $3, Block($6));
 	}
 	;
 
 parameterList:
 	// empty
 	{
-		$$ = std::vector<Parameter>();
+		$$ = new std::vector<Parameter>();
 	}
 	| parameterList ',' ID
 	{
-		$1.push_back(Id($3));
+		$1->push_back(Id($3));
 	}
 	| parameterList ',' NUMBER
 	{
-		$1.push_back(Number($3));
+		$1->push_back(Number($3));
 	}
 	| parameterList ',' epsilon
 	{
-		$1.push_back($3);
+		$1->push_back(*$3);
 	}
 	| ID
 	{
-		$$ = std::vector<Parameter>();
-		$$.push_back(IdParameter($1));
+		$$ = new std::vector<Parameter>();
+		$$->push_back(IdParameter($1));
 	}
 	| NUMBER
 	{
-		$$ = std::vector<Parameter>();
-		$$.push_back(NumberParameter($1));
+		$$ = new std::vector<Parameter>();
+		$$->push_back(NumberParameter($1));
 	}
 	| epsilon
 	{
-		$$ = std::vector<Parameter>();
-		$$.push_back($1);
+		$$ = new std::vector<Parameter>();
+		$$->push_back($1);
 	}
 	;
 
 epsilon:
 	NUMBER PLUS_MINUS NUMBER
 	{
-		$$ = EpsilonParameter($1, $3);
+		$$ = new EpsilonParameter($1, $3);
 	}
 	;
 
 statementList:
 	// empty
 	{
-		$$ = std::vector<Statement>();
+		$$ = new std::vector<Statement>();
 	}
 	| statementList statement
 	{
-		$1.push_back($2);
+		$1->push_back(*$2);
 	}
 	;
 
@@ -136,68 +133,68 @@ statement:
 lambda:
 	LET ID '(' parameterList ')' '=' expression
 	{
-		$$ = Lambda($2, $4, $7);
+		$$ = new Lambda($2, $4, $7);
 	}
 	;
 
 variableDecl:
 	LET ID '=' expression
 	{
-		$$ = VariableDecl($2, $4);
+		$$ = new VariableDecl($2, $4);
 	}
 	;
 
 assignment:
 	ID '=' expression
 	{
-		$$ = Assignment($1, $3);
+		$$ = new Assignment($1, $3);
 	}
 	;
 
 expressionStatement:
 	expression
 	{
-		$$ = ExpressionStatement($1);
+		$$ = new ExpressionStatement($1);
 	}
 	;
 
 expression:
 	NUMBER
 	{
-		$$ = Number($1);
+		$$ = new Number($1);
 	}
 	| ID
 	{
-		$$ = Id($1);
+		$$ = new Id($1);
 	}
 	| functionCall
 	| expression PLUS expression
 	{
-		$$ = BinaryOp($1, "+", $3);
+		$$ = new BinaryOp($1, "+", $3);
 	}
 	| expression SUB expression
 	{
-		$$ = BinaryOp($1, "-", $3);
+		$$ = new BinaryOp($1, "-", $3);
 	}
 	| expression MULT expression
 	{
-		$$ = BinaryOp($1, "*", $3);
+		$$ = new BinaryOp($1, "*", $3);
 	}
 	| expression DIV expression
 	{
-		$$ = BinaryOp($1, "/", $3);
+		$$ = new BinaryOp($1, "/", $3);
 	}
 	| expression EXP expression
 	{
-		$$ = BinaryOp($1, "^", $3);
+		$$ = new BinaryOp($1, "^", $3);
 	}
 	| expression INTDIV expression
 	{
-		$$ = BinaryOp($1, "//", $3);
+		$$ = new BinaryOp($1, "//", $3);
 	}
 	| expression MOD expression
 	{
-		$$ = BinaryOp($1, "%", $3);
+		$$ = new BinaryOp($1, "%", $3);
 	}
 	| '(' expression ')'
 	{
@@ -208,17 +205,17 @@ expression:
 functionCall:
 	ID '(' expressionList ')'
 	{
-		$$ = FunctionCall($1, $3);
+		$$ = new FunctionCall($1, $3);
 	}
 	;
 
 expressionList:
 	// empty
 	{
-		$$ = std::vector<Expression>();
+		$$ = new std::vector<Expression>();
 	}
 	| expressionList expression
 	{
-		$1.push_back($2);
+		$1->push_back(*$2);
 	}
 	;

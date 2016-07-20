@@ -4,40 +4,53 @@
 
 typedef double NUMBER_T;
 
-struct Parameter;
-struct Statement;
-struct Block;
+class Parameter {};
+class Statement {};
+class Expression {};
 
-struct Function
+class Block
 {
+public:
+	std::vector<Statement> statements;
+	
+	Block(std::vector<Statement> statements) :
+		statements(statements) {}
+};
+
+class Function
+{
+public:
 	std::string name;
 	std::vector<Parameter> parameters;
 	Block block;
-	
-	Function(std::string name, std::vector<Parameter> paramaters, Block block) :
+
+	Function(std::string name, std::vector<Parameter> parameters, Block block) :
 		name(name), parameters(parameters), block(block) {}
 };
 
-struct Parameter {};
 
-struct IdParameter : Parameter
+
+class IdParameter : Parameter
 {
+public:
 	std::string name;
 	
 	IdParameter(std::string name) :
 		name(name) {}
 };
 
-struct NumberParameter : Parameter
+class NumberParameter : Parameter
 {
+public:
 	NUMBER_T value;
 	
 	NumberParameter(NUMBER_T value):
 		value(value) {}
 };
 
-struct EpsilonParameter : NumberParameter
+class EpsilonParameter : NumberParameter
 {
+public:
 	NUMBER_T epsilon;
 	
 	EpsilonParameter(NUMBER_T value, NUMBER_T epsilon) :
@@ -45,50 +58,82 @@ struct EpsilonParameter : NumberParameter
 };
 
 
-struct Block
+class Lambda : Statement
 {
-	std::vector<Statement> statements;
+public:
+	std::string name;
+	std::vector<Parameter> parameters;
+	Expression expression;
 	
-	Block(std::vector<Statement> statements) :
-		statements(statements) {}
+	Lambda(std::string name, std::vector<Parameter> parameters, Expression expression) :
+		name(name), parameters(parameters), expression(expression) {}
 };
 
-
-struct Statement {};
-struct Expression {};
-
-
-struct Lambda : Statement
+class VariableDecl : Statement
 {
+public:
+	std::string name;
+	Expression expression;
 	
+	VariableDecl(std::string name, Expression expression) :
+		name(name), expression(expression) {}
 };
 
-struct VariableDecl : Statement
+class Assignment : Statement
 {
+public:
+	std::string name;
+	Expression expression;
+	
+	Assignment(std::string name, Expression expression) :
+		name(name), expression(expression) {}
 };
 
-struct Assignment : Statement
+
+class ExpressionStatement : Statement
 {
+public:
+	Expression expression;
+	
+	ExpressionStatement(Expression expression) :
+		expression(expression) {}
 };
 
-
-struct ExpressionStatement : Statement
+class Number : Expression
 {
+public:
+	NUMBER_T value;
+	
+	Number(NUMBER_T value) :
+		value(value) {}
 };
 
-struct Number : Expression
+class Id : Expression
 {
+public:
+	std::string name;
+	
+	Id(std::string name) :
+		name(name) {}
 };
 
-struct Id : Expression
+class FunctionCall : Expression
 {
+public:
+	std::string value;
+	std::vector<Expression> expressionList;
+	
+	FunctionCall(std::string value, std::vector<Expression> expressionList) :
+		value(value), expressionList(expressionList) {}
 };
 
-struct FunctionCall : Expression
+class BinaryOp : Expression
 {
+public:
+	Expression left;
+	Expression right;
+	std::string op;
+	
+	BinaryOp(Expression left, std::string op, Expression right) :
+		left(left), op(op), right(right) {}
 };
-
-struct BinaryOp : Expression
-{
-};
-

@@ -1,8 +1,10 @@
 %{
 	#include <iostream>
 	#include <string>
-	#include "parser.hpp"
+	#include <vector>
 	
+	#include "parser.hpp"
+	#include "ast.hpp"
 	#include "Registry.hpp"
 	
 	#define TOKEN(X) { return X; }
