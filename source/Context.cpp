@@ -3,7 +3,12 @@
 
 Function * FunctionBundle::getBase()
 {
+	if (sym == "main") {
+		return nullptr;
+	}
+	
 	for (Function * function : impls) {
+		std::cout << "checking on " << function->name << std::endl;
 		if (function->isSpecification()) {
 			return function;
 		}
@@ -22,9 +27,13 @@ void FunctionBundle::addFunction(Function * function)
 	}
 	
 	std::stringstream ss;
-	ss << function->name << "_" << impls.size();		
+	ss << function->name;
+	
+	if (function->name != "main") {
+		ss << "_" << impls.size();
+	}
+	
 	function->setRealName(ss.str());
-
 	impls.push_back(function);
 }	
 
@@ -40,9 +49,16 @@ void Context::addFunction(Function * function)
 
 void Context::generateFunctionDummies()
 {
-	typedef std::map<std::string, FunctionBundle>::iterator it_type;
-	for(it_type it = functions.begin(); it != functions.end(); it++) {
-		FunctionBundle & functionBundle = it->second;
+	for(auto it = functions.begin(); it != functions.end(); it++) {
+		//FunctionBundle & functionBundle = it->second;
 
+		std::cout << "sym: " << it->second.getSym() << std::endl;
+		for (Function * fn : it->second.getImpls()) {
+			std::cout << fn->getRealName() << std::endl;
+		}
+		
+		//Function * base = functionBundle.getBase();
+		//std::cout << functionBundle.getSym() << std::endl;
+		//std::cout << base->name << std::endl;
 	}
 }

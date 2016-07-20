@@ -28,6 +28,16 @@ public:
 	Function * getBase();
 		
 	void addFunction(Function * function);
+	
+	std::string getSym() const
+	{
+		return sym;
+	}
+	
+	std::vector<Function*>& getImpls()
+	{
+		return impls;
+	}
 };
 
 class Scope
