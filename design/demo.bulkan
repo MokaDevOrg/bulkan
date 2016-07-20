@@ -1,7 +1,10 @@
-func(a) =
-	let g(x) = x + 2
-	a + 2;
+# when specialization works propertly, this should calculate the nth fib.
+
+fib(n) = fib(n - 2) + fib(n - 1);
+# fib(1) = 1;
+# fib(0) = 0;
 
 main() = 
-	let b = func(2)
-	log 'the value is: $b $b';
+	let n = 5
+	let x = fib(n)
+	log 'the $n-nth fib is: $x';
