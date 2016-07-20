@@ -3,5 +3,4 @@ func(a, b, c) =
     func + 2;
 
 main() =
-    f()
-    ;
+    f();
