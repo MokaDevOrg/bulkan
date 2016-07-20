@@ -16,6 +16,7 @@
 
 %%
 let						TOKEN(LET);
+log						TOKEN(LOG);
 [0-9]+(\.[0-9]*)?      	{ yylval.number = std::stof(yytext); return NUMBER; }
 [a-zA-Z][a-zA-Z0-9]*   	{ yylval.id = registry.get(yytext, yyleng); return ID; }
 \+						TOKEN(PLUS);

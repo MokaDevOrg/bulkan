@@ -1,0 +1,2 @@
+./parser < $1 > out.c
+cc out.c -o $2 -lm
