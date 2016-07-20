@@ -24,6 +24,17 @@ public:
 	{
 	}
 	
+	Function * getBase()
+	{
+		for (Function * function : impls) {
+			if (function->isSpecification()) {
+				return function;
+			}
+		}
+		
+		return nullptr;
+	}
+	
 	void addFunction(Function * function)
 	{
 		impls.push_back(function);
