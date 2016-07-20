@@ -3,4 +3,6 @@ func(a) =
 	a = 4
 	a + 2;
 
-main() = func(2);
+main() = 
+	let b = func(2)
+	log b;
