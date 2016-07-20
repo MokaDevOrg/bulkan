@@ -1,0 +1,7 @@
+.DS_Store
+.idea/
+*.o
+parser
+parser.cpp
+parser.hpp
+tokens.cpp

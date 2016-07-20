@@ -1,0 +1,71 @@
+program:
+    program function
+    ;
+
+function:
+    ID '(' parameterList ')' '=' statementList ';'
+    ;
+
+parameterList:
+    // empty
+    | parameterList ',' ID
+    | parameterList ',' NUMBER
+    | parameterList ',' epsilon
+    | ID
+    | NUMBER
+    | epsilon
+    ;
+
+epsilon:
+    NUMBER PLUS_MINUS NUMBER
+    ;
+
+statementList:
+    // empty
+    | statementList statement
+    ;
+
+statement:
+    lambda
+    | variableDeclaration
+    | assignment
+    | expressionStatement
+    ;
+
+lambda:
+    LET ID '(' parameterList ')' '=' expression
+    ;
+
+variableDeclaration:
+    LET ID '=' expression
+    ;
+
+assignment:
+    ID '=' expression
+    ;
+
+expressionStatement:
+    expression
+    ;
+
+expression:
+    NUMBER
+    | ID
+    | functionCall
+    | expression PLUS expression
+    | expression SUB expression
+    | expression MULT expression
+    | expression DIV expression
+    | expression EXP expression
+    | expression INTDIV expression
+    | '(' expression ')'
+    ;
+
+functionCall:
+    ID '(' expressionList ')'
+    ;
+
+expressionList:
+    // empty
+    | expressionList expression
+    ;
