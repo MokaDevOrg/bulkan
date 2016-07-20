@@ -34,14 +34,14 @@ void yyerror(const char * str)
 }
 
 
-%token LET PLUS MULT DIV INTDIV MOD EXP SUB PLUS_MINUS
+%token LET LOG PLUS MULT DIV INTDIV MOD EXP SUB PLUS_MINUS
 %token <id> ID
 %token <number> NUMBER
 
 
 %type <function> function
 %type <parameter> epsilon
-%type <statement> statement assignment lambda variableDecl expressionStatement
+%type <statement> statement assignment lambda variableDecl expressionStatement log
 %type <expression> expression functionCall
 %type <parameterList> parameterList
 %type <statementList> statementList
@@ -131,6 +131,7 @@ statement:
 	| variableDecl
 	| assignment
 	| expressionStatement
+	| log
 	;
 
 lambda:
@@ -236,5 +237,12 @@ expressionList:
 	{
 		$$ = new std::vector<std::shared_ptr<Expression>>();
 		$$->push_back(std::shared_ptr<Expression>($1));
+	}
+	;
+
+log:
+	LOG expression
+	{
+		$$ = new Log(std::shared_ptr<Expression>($2));
 	}
 	;

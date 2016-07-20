@@ -21,6 +21,7 @@ class Lambda;
 class FunctionCall;
 class Assignment;
 class VariableDecl;
+class Log;
 
 
 class Generator
@@ -53,4 +54,6 @@ public:
 	void generate(Assignment & assignment);	
 	
 	void generate(VariableDecl & varDecl);
+	
+	void generate(Log & log);
 };

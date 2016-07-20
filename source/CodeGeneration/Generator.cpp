@@ -158,6 +158,7 @@ void Generator::generate(Lambda & lambda)
 
 void Generator::generate(FunctionCall & functionCall)
 {
+	// TODO: search lambda and then functions.
 	if (context.hasFunction(functionCall.name)) {
 		context.out() << functionCall.name << "(";
 	} else {
@@ -193,4 +194,9 @@ void Generator::generate(VariableDecl & varDecl)
 	context.out() << "double ";
 	context.out() << varDecl.name << " = ";
 	varDecl.expression->accept(this);
+}
+
+void Generator::generate(Log & log)
+{
+	
 }

@@ -14,6 +14,10 @@ int main(int argc, char **argv)
 
 	Generator generator;
 	generator.generate(functions);
+	
+	std::cout << "#include <math.h>" << std::endl;
+	std::cout << "#include <stdio.h>" << std::endl;
+	std::cout << std::endl;
 
 	generator.context.toPrelude();
 	std::cout << "// prelude." << std::endl;
