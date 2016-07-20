@@ -129,7 +129,7 @@ void Generator::generate(Lambda & lambda)
 	
 	auto function = context.getFunction();
 
-	context.out() << "double " << function.name << "__" << lambda.name << "(";
+	context.out() << "double " << function.getRealName() << "__" << lambda.name << "(";
 
 	// parameters.
 	for (int i = 0; i < lambda.parameters.size(); i++) {

@@ -7,6 +7,7 @@
 #include "ast.hpp"
 
 int yydebug = 0;
+
 size_t yyline = 1;
 
 extern int yylex();
