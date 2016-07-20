@@ -16,8 +16,12 @@ int main(int argc, char **argv)
 	generator.generate(functions);
 
 	generator.context.toPrelude();
+	std::cout << "// prelude." << std::endl;
 	std::cout << generator.context.out().str();
-	
+
+	std::cout << std::endl;
+
+	std::cout << "// body." << std::endl;
 	generator.context.toBody();
 	std::cout << generator.context.out().str();
 	
