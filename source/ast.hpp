@@ -2,11 +2,10 @@
 
 #include <vector>
 
-class Generator;
-
 #include "CodeGeneration/Generator.hpp"
 
 typedef double NUMBER_T;
+
 
 class Parameter {};
 class Statement {};
