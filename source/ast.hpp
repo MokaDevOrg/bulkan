@@ -155,6 +155,12 @@ public:
 	
 	Number(NUMBER_T value) :
 		value(value) {}
+		
+	void accept(Generator * generator)
+	{
+		generator->generate(*this);
+	}
+
 };
 
 class Id : public Expression
@@ -184,10 +190,15 @@ public:
 class BinaryOp : public Expression
 {
 public:
-	Expression left;
-	Expression right;
+	std::shared_ptr<Expression> left;
+	std::shared_ptr<Expression> right;
 	std::string op;
 	
-	BinaryOp(Expression left, std::string op, Expression right) :
+	BinaryOp(std::shared_ptr<Expression> left, std::string op, std::shared_ptr<Expression> right) :
 		left(left), op(op), right(right) {}
+
+	void accept(Generator * generator)
+	{
+		generator->generate(*this);
+	}
 };

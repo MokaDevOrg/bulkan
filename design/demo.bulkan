@@ -1,6 +1,5 @@
 func(a, b, c) =
-    a
-    b;
+    a + b - x * c^2.81932 + (r + t);
 
 main() =
     f();

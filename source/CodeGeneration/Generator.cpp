@@ -69,3 +69,25 @@ void Generator::generate(Id & id)
 {
 	std::cout << id.name;
 }
+
+void Generator::generate(BinaryOp & binaryOp)
+{
+	if (binaryOp.op == "^") {
+		std::cout << "pow(";
+		binaryOp.left->accept(this);
+		std::cout << ", ";
+	
+	} else {
+		std::cout << "(";
+		binaryOp.left->accept(this);
+		std::cout << " " << binaryOp.op << " ";
+	}
+
+	binaryOp.right->accept(this);
+	std::cout << ")";
+}
+
+void Generator::generate(Number & number)
+{
+	std::cout << number.value;
+}

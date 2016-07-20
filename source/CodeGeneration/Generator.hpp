@@ -11,7 +11,8 @@ class NumberParameter;
 class EpsilonParameter;
 class Block;
 class Id;
-
+class BinaryOp;
+class Number;
 
 class Generator
 {
@@ -32,4 +33,8 @@ public:
 	void generate(Block & block);
 	
 	void generate(Id & id);
+	
+	void generate(BinaryOp & binaryOp);
+	
+	void generate(Number & number);
 };

@@ -184,31 +184,31 @@ expression:
 	| functionCall
 	| expression PLUS expression
 	{
-		$$ = new BinaryOp(*$1, "+", *$3);
+		$$ = new BinaryOp(std::shared_ptr<Expression>($1), "+", std::shared_ptr<Expression>($3));
 	}
 	| expression SUB expression
 	{
-		$$ = new BinaryOp(*$1, "-", *$3);
+		$$ = new BinaryOp(std::shared_ptr<Expression>($1), "-", std::shared_ptr<Expression>($3));
 	}
 	| expression MULT expression
 	{
-		$$ = new BinaryOp(*$1, "*", *$3);
+		$$ = new BinaryOp(std::shared_ptr<Expression>($1), "*", std::shared_ptr<Expression>($3));
 	}
 	| expression DIV expression
 	{
-		$$ = new BinaryOp(*$1, "/", *$3);
+		$$ = new BinaryOp(std::shared_ptr<Expression>($1), "/", std::shared_ptr<Expression>($3));
 	}
 	| expression EXP expression
 	{
-		$$ = new BinaryOp(*$1, "^", *$3);
+		$$ = new BinaryOp(std::shared_ptr<Expression>($1), "^", std::shared_ptr<Expression>($3));
 	}
 	| expression INTDIV expression
 	{
-		$$ = new BinaryOp(*$1, "//", *$3);
+		$$ = new BinaryOp(std::shared_ptr<Expression>($1), "//", std::shared_ptr<Expression>($3));
 	}
 	| expression MOD expression
 	{
-		$$ = new BinaryOp(*$1, "%", *$3);
+		$$ = new BinaryOp(std::shared_ptr<Expression>($1), "%", std::shared_ptr<Expression>($3));
 	}
 	| '(' expression ')'
 	{
