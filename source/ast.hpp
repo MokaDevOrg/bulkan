@@ -2,6 +2,10 @@
 
 #include <vector>
 
+class Generator;
+
+#include "CodeGeneration/Generator.hpp"
+
 typedef double NUMBER_T;
 
 class Parameter {};
@@ -26,6 +30,10 @@ public:
 
 	Function(std::string name, std::vector<Parameter> parameters, Block block) :
 		name(name), parameters(parameters), block(block) {}
+	
+	void accept(Generator * generator) {
+		generator->generate(*this);
+	}
 };
 
 

@@ -10,7 +10,7 @@ parser.cpp:
 	bison -d -o parser.cpp parser.y
 
 main: tokens.cpp parser.cpp
-	g++ main.cpp -o parser parser.cpp tokens.cpp --std=c++11 -Wno-deprecated-register -Wno-reorder -Wno-unused-function
+	g++ main.cpp -o parser parser.cpp tokens.cpp CodeGeneration/*.cpp --std=c++11 -Wno-deprecated-register -Wno-reorder -Wno-unused-function
 
 run: clean main
 	./parser < ../design/demo.bulkan

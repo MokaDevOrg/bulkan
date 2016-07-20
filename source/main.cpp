@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 
+#include "CodeGeneration/Generator.hpp"
 #include "ast.hpp"
 
 extern int yyparse();
@@ -11,9 +12,8 @@ int main(int argc, char **argv)
 {
 	yyparse();
 	
-	for (auto i : functions) {
-		
-	}
+	Generator generator;
+	generator.generate(functions);
 
 	return 0;
 }
