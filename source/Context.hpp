@@ -15,6 +15,10 @@ private:
 	std::vector<Function*> impls;
 
 public:
+	FunctionBundle()
+	{
+	}
+	
 	FunctionBundle(std::string sym) :
 		sym(sym)
 	{
@@ -138,10 +142,10 @@ public:
 		return true;
 	}
 
-	Function & getFunction(std::string name)
+	/*Function & getFunction(std::string name)
 	{
 		return *functions[name];
-	}
+	}*/
 	
 	Function & getFunction()
 	{
