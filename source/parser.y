@@ -15,6 +15,7 @@ extern std::vector<Function> functions;
 void yyerror(const char * str)
 {
 	std::cerr << "error: " << str << std::endl;
+	exit(1);
 }
 %}
 
@@ -35,7 +36,7 @@ void yyerror(const char * str)
 
 
 %token LET LOG PLUS MULT DIV INTDIV MOD EXP SUB PLUS_MINUS
-%token <id> ID
+%token <id> ID STRING
 %token <number> NUMBER
 
 
@@ -244,5 +245,9 @@ log:
 	LOG expression
 	{
 		$$ = new Log(std::shared_ptr<Expression>($2));
+	}
+	| LOG STRING
+	{
+		$$ = new Log(*$2);
 	}
 	;

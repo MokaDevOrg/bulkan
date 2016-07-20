@@ -199,6 +199,10 @@ void Generator::generate(VariableDecl & varDecl)
 
 void Generator::generate(Log & log)
 {
+<<<<<<< HEAD
+	
+}
+=======
 	if (log.expression) {
 		context.out() << "printf(\"%lf\\n\", ";
 		log.expression->accept(this);
@@ -242,3 +246,4 @@ void Generator::generate(Log & log)
 		context.out() << ")";
 	}
 }
+>>>>>>> 1818d83d9347a08fa5c6174adfdd0644ad1c94ba
