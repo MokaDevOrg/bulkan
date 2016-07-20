@@ -8,6 +8,23 @@
 
 class Function;
 
+class FunctionBundle
+{
+private:
+	std::string sym;
+	std::vector<Function*> impls;
+
+public:
+	FunctionBundle(std::string sym) :
+		sym(sym)
+	{
+	}
+	
+	void addFunction(Function * function)
+	{
+		impls.push_back(function);
+	}
+};
 
 class Scope
 {
@@ -89,7 +106,7 @@ public:
 class Context
 {
 private:
-	std::map<std::string, Function*> functions;
+	std::map<std::string, FunctionBundle> functions;
 	
 	Function * lastFunction = nullptr;
 
