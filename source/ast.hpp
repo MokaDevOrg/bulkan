@@ -107,10 +107,15 @@ class Lambda : public Statement
 public:
 	std::string name;
 	std::vector<IdParameter> parameters;
-	Expression expression;
+	std::shared_ptr<Expression> expression;
 	
-	Lambda(std::string name, std::vector<IdParameter> parameters, Expression expression) :
+	Lambda(std::string name, std::vector<IdParameter> parameters, std::shared_ptr<Expression> expression) :
 		name(name), parameters(parameters), expression(expression) {}
+	
+	void accept(Generator * generator)
+	{
+		generator->generate(*this);
+	}
 };
 
 class VariableDecl : public Statement
@@ -180,11 +185,16 @@ public:
 class FunctionCall : public Expression
 {
 public:
-	std::string value;
-	std::vector<Expression> expressionList;
+	std::string name;
+	std::vector<std::shared_ptr<Expression>> expressionList;
 	
-	FunctionCall(std::string value, std::vector<Expression> expressionList) :
-		value(value), expressionList(expressionList) {}
+	FunctionCall(std::string name, std::vector<std::shared_ptr<Expression>> expressionList) :
+		name(name), expressionList(expressionList) {}
+	
+	void accept(Generator * generator)
+	{
+		generator->generate(*this);
+	}
 };
 
 class BinaryOp : public Expression

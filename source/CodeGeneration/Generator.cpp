@@ -1,6 +1,8 @@
 #include "Generator.hpp"
 
 #include "../ast.hpp"
+#include "../Context.hpp"
+
 
 void Generator::generate(std::vector<Function> functions)
 {
@@ -11,34 +13,40 @@ void Generator::generate(std::vector<Function> functions)
 
 void Generator::generate(Function & function)
 {
+	context.addFunction(&function);
+	auto scope = context.createScope(false);
+	
 	if (function.name == "main") {
-		std::cout << "int ";
+		context.out() << "int ";
 	} else {
-		std::cout << "double ";
+		context.out() << "double ";
 	}
 	
-	std::cout << function.name;
-	std::cout << "(";
+	context.out() << function.name;
+	context.out() << "(";
 
 	for (int i = 0; i < function.parameters.size(); i++) {
 		if (i > 0) {
-			std::cout << ", ";
+			context.out() << ", ";
 		}
 		
-		std::cout << "double ";
+		context.out() << "double ";
 		function.parameters[i]->accept(this);
 	}
 	
-	std::cout << ")" << std::endl << "{" << std::endl;
+	context.out() << ")" << std::endl << "{" << std::endl;
 	
 	function.block.accept(this);
 	
-	std::cout << "}" << std::endl;
+	context.out() << "}" << std::endl << std::endl;
+	
+	context.popScope();
 }
 
 void Generator::generate(IdParameter & parameter)
 {
-	std::cout << parameter.name;
+	context.out() << parameter.name;
+	context.getScope()->addSymbol(parameter.name, false);
 }
 
 void Generator::generate(NumberParameter & parameter)
@@ -54,40 +62,99 @@ void Generator::generate(EpsilonParameter & parameter)
 void Generator::generate(Block & block)
 {
 	for (int i = 0; i < block.statements.size(); i++) {
-		std::cout << "    ";
+		context.out() << "    ";
 		
 		if (i == block.statements.size() - 1) {
-			std::cout << "return ";
+			context.out() << "return ";
 		}
 		
 		block.statements[i]->accept(this);
-		std::cout << ";" << std::endl;
+		context.out() << ";" << std::endl;
 	}
 }
 
 void Generator::generate(Id & id)
 {
-	std::cout << id.name;
+	context.getScope()->assertSymbol(id.name);
+	context.out() << id.name;
 }
 
 void Generator::generate(BinaryOp & binaryOp)
 {
 	if (binaryOp.op == "^") {
-		std::cout << "pow(";
+		context.out() << "pow(";
 		binaryOp.left->accept(this);
-		std::cout << ", ";
-	
+		context.out() << ", ";
 	} else {
-		std::cout << "(";
+		context.out() << "(";
 		binaryOp.left->accept(this);
-		std::cout << " " << binaryOp.op << " ";
+		context.out() << " " << binaryOp.op << " ";
 	}
 
 	binaryOp.right->accept(this);
-	std::cout << ")";
+	context.out() << ")";
 }
 
 void Generator::generate(Number & number)
 {
-	std::cout << number.value;
+	context.out() << number.value;
+}
+
+void Generator::generate(Lambda & lambda)
+{
+	auto functionScope = context.getScope();
+	functionScope->addSymbol(lambda.name, true);
+	
+	context.createScope(false);
+	context.toPrelude();
+	
+	auto function = context.getFunction();
+
+	context.out() << "double " << function.name << "__" << lambda.name << "(";
+
+	// parameters.
+	for (int i = 0; i < lambda.parameters.size(); i++) {
+		if (i > 0) {
+			context.out() << ", ";
+		}
+		
+		context.out() << "double ";
+		lambda.parameters[i].accept(this);
+	}
+
+	context.out() << ")" << std::endl << "{" << std::endl;
+
+	// return expression.
+	context.out() << "    return ";
+	lambda.expression->accept(this);
+	context.out() << ";" << std::endl;
+
+	context.out() << "}" << std::endl << std::endl;
+
+	context.toBody();
+	context.popScope();
+	
+	context.out() << "// lambda defined: " << lambda.name;
+}
+
+void Generator::generate(FunctionCall & functionCall)
+{
+	if (context.hasFunction(functionCall.name)) {
+		context.out() << functionCall.name << "(";
+	} else {
+		context.getScope()->assertLambda(functionCall.name);
+
+		auto functionName = context.getFunction().name;
+		context.out() << functionName << "__" << functionCall.name << "(";
+	}
+	
+	for (int i = 0; i < functionCall.expressionList.size(); i++) {
+		if (i > 0) {
+			context.out() << ", ";
+		}
+		
+		functionCall.expressionList[i]->accept(this);
+	}
+	
+	context.out() << ")";
 }

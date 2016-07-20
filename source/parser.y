@@ -27,7 +27,7 @@ void yyerror(const char * str)
 	std::vector<std::shared_ptr<Parameter>> * parameterList;
 	std::vector<IdParameter> * idParameterList;
 	std::vector<std::shared_ptr<Statement>> * statementList;
-	std::vector<Expression> * expressionList;
+	std::vector<std::shared_ptr<Expression>> * expressionList;
 
 	float number;
 	std::string * id;
@@ -136,7 +136,7 @@ statement:
 lambda:
 	LET ID '(' idParameterList ')' '=' expression
 	{
-		$$ = new Lambda(*$2, *$4, *$7);
+		$$ = new Lambda(*$2, *$4, std::shared_ptr<Expression>($7));
 	}
 	;
 
@@ -226,10 +226,15 @@ functionCall:
 expressionList:
 	// empty
 	{
-		$$ = new std::vector<Expression>();
+		$$ = new std::vector<std::shared_ptr<Expression>>();
 	}
-	| expressionList expression
+	| expressionList ',' expression
 	{
-		$1->push_back(*$2);
+		$1->push_back(std::shared_ptr<Expression>($3));
+	}
+	| expression
+	{
+		$$ = new std::vector<std::shared_ptr<Expression>>();
+		$$->push_back(std::shared_ptr<Expression>($1));
 	}
 	;
