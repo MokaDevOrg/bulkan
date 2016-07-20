@@ -92,10 +92,26 @@ public:
 		}
 	}
 	
+	void assertSymbol(std::string name, size_t line)
+	{
+		if (!hasSymbol(name)) {
+			std::cerr << "Symbol not defined: " << name << ", near line " << line << std::endl;
+			exit(1);
+		}
+	}
+
 	void assertSymbol(std::string name)
 	{
 		if (!hasSymbol(name)) {
 			std::cerr << "Symbol not defined: " << name << std::endl;
+			exit(1);
+		}
+	}
+
+	void assertLambda(std::string name, size_t line)
+	{
+		if (!hasLambda(name)) {
+			std::cerr << "Lambda or function not defined: " << name << ", near line " << line << std::endl;
 			exit(1);
 		}
 	}

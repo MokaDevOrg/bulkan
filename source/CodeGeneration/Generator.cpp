@@ -94,7 +94,7 @@ void Generator::generate(Block & block)
 
 void Generator::generate(Id & id)
 {
-	context.getScope()->assertSymbol(id.name);
+	context.getScope()->assertSymbol(id.name, id.line);
 	context.out() << id.name;
 }
 
@@ -162,7 +162,7 @@ void Generator::generate(FunctionCall & functionCall)
 	if (context.hasFunction(functionCall.name)) {
 		context.out() << functionCall.name << "(";
 	} else {
-		context.getScope()->assertLambda(functionCall.name);
+		context.getScope()->assertLambda(functionCall.name, functionCall.line);
 
 		auto functionName = context.getFunction().name;
 		context.out() << functionName << "__" << functionCall.name << "(";
@@ -181,7 +181,7 @@ void Generator::generate(FunctionCall & functionCall)
 
 void Generator::generate(Assignment & assignment)
 {
-	context.getScope()->assertSymbol(assignment.name);
+	context.getScope()->assertSymbol(assignment.name, assignment.line);
 	
 	context.out() << assignment.name << " = ";
 	assignment.expression->accept(this);
@@ -234,7 +234,7 @@ void Generator::generate(Log & log)
 		context.out() << "printf(\"" << buffer.str() << "\\n\"";
 		
 		for (auto id : ids) {
-			context.getScope()->assertSymbol(id);
+			context.getScope()->assertSymbol(id, log.line);
 			
 			context.out() << ", " << id;
 		}

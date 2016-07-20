@@ -1,6 +1,5 @@
 func(a) =
 	let g(x) = x
-	a = 4
 	a + 2;
 
 main() = 

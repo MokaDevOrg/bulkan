@@ -7,6 +7,7 @@
 #include "ast.hpp"
 
 int yydebug = 0;
+size_t yyline = 1;
 
 extern int yylex();
 
@@ -14,7 +15,7 @@ extern std::vector<Function> functions;
 
 void yyerror(const char * str)
 {
-	std::cerr << "error: " << str << std::endl;
+	std::cerr << "error: " << str << " at line " << yyline << std::endl;
 	exit(1);
 }
 %}
