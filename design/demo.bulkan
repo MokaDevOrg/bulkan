@@ -1,5 +1,5 @@
 func(a) =
-	let h = g()
+	let g(x) = x
 	a = 4
 	a + 2;
 

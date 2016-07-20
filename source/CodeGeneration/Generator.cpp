@@ -11,18 +11,15 @@ void Generator::generate(std::vector<Function> functions)
 	}
 }
 
-void Generator::generate(Function & function)
+void renderFunctionHeader(Generator * generator, Context & context, Function & function)
 {
-	context.addFunction(&function);
-	auto scope = context.createScope(false);
-	
 	if (function.name == "main") {
 		context.out() << "int ";
 		function.block.inMain = true;
 	} else {
 		context.out() << "double ";
 	}
-	
+
 	context.out() << function.name;
 	context.out() << "(";
 
@@ -30,23 +27,40 @@ void Generator::generate(Function & function)
 		if (i > 0) {
 			context.out() << ", ";
 		}
-		
+
 		context.out() << "double ";
-		function.parameters[i]->accept(this);
+		function.parameters[i]->accept(generator);
 	}
 	
-	context.out() << ")" << std::endl << "{" << std::endl;
-	
+	context.out() << ")";
+}
+
+void Generator::generate(Function & function)
+{
+	context.addFunction(&function);
+	auto scope = context.createScope(false);
+
+	// create header code.
+	context.toPrelude();
+	renderFunctionHeader(this, context, function);
+	context.out() << ";" << std::endl << std::endl;
+
+	// create body.
+	context.toBody();
+	renderFunctionHeader(this, context, function);
+
+	context.out() << std::endl << "{" << std::endl;
+
 	function.block.accept(this);
-	
+
 	context.out() << "}" << std::endl << std::endl;
-	
+
 	context.popScope();
 }
 
 void Generator::generate(IdParameter & parameter)
 {
-	context.getScope()->addSymbol(parameter.name, false);
+	context.getScope()->addSymbol(parameter.name, false, true);
 	context.out() << parameter.name;
 }
 

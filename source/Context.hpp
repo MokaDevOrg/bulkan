@@ -53,9 +53,13 @@ public:
 		return false;
 	}
 	
-	void addSymbol(std::string name, bool isLambda)
+	void addSymbol(std::string name, bool isLambda, bool ignoreRepeat = false)
 	{
 		if (hasSymbol(name)) {
+			if (ignoreRepeat) {
+				return;
+			}
+			
 			std::cerr << "Symbol already defined: " << name << std::endl;
 			exit(1);
 		}
@@ -78,7 +82,7 @@ public:
 	void assertLambda(std::string name)
 	{
 		if (!hasLambda(name)) {
-			std::cerr << "Lambda not defined: " << name << std::endl;
+			std::cerr << "Lambda or function not defined: " << name << std::endl;
 			exit(1);
 		}
 	}
