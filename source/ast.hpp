@@ -2,6 +2,8 @@
 
 #include <vector>
 #include <memory>
+#include <cassert>
+#include <sstream>
 
 #include "CodeGeneration/Generator.hpp"
 
@@ -10,7 +12,17 @@ typedef double NUMBER_T;
 
 class Parameter {
 public:
-	virtual bool isId() { return false; }
+	virtual bool isId()
+	{
+		return false;
+	}
+	
+	virtual std::string getCondition(std::string id)
+	{
+		assert(!isId());
+		return "";
+	}
+	
 	virtual void accept(Generator * generator) {}
 };
 
@@ -33,6 +45,67 @@ public:
 
 	Block(std::vector<std::shared_ptr<Statement>> statements, bool topLevel) :
 		statements(statements), topLevel(topLevel) {}
+
+	void accept(Generator * generator)
+	{
+		generator->generate(*this);
+	}
+};
+
+class IdParameter : public Parameter
+{
+public:
+	std::string name;
+	
+	IdParameter(std::string name) :
+		name(name) {}
+
+	bool isId() const
+	{
+		return true;
+	}
+
+    void accept(Generator * generator)
+	{
+		generator->generate(*this);
+	}
+};
+
+class NumberParameter : public Parameter
+{
+public:
+	NUMBER_T value;
+	
+	NumberParameter(NUMBER_T value):
+		value(value) {}
+	
+	std::string getCondition(std::string id)
+	{
+		std::stringstream ss;
+		ss << id << " == " << value;
+		return ss.str();
+	}
+	
+	void accept(Generator * generator)
+	{
+		generator->generate(*this);
+	}
+};
+
+class EpsilonParameter : public NumberParameter
+{
+public:
+	NUMBER_T epsilon;
+	
+	EpsilonParameter(NUMBER_T value, NUMBER_T epsilon) :
+		NumberParameter(value), epsilon(epsilon) {}
+
+	std::string getCondition(std::string id)
+	{
+		std::stringstream ss;
+		ss << id << ">=" << (value - epsilon) << " && " << id << " <= " << (value + epsilon);
+		return ss.str();
+	}
 
 	void accept(Generator * generator)
 	{
@@ -64,61 +137,32 @@ public:
 		return false;
 	}
 	
-	void accept(Generator * generator)
+	std::string getCondition(const Function& base)
 	{
-		generator->generate(*this);
+		assert(!base.isSpecification());
+		assert(this != &base);
+
+		std::stringstream ss;
+		
+		for (int i = 0; i < parameters.size(); i++) {
+			if (!parameters[i]->isId()) {
+				IdParameter * param = static_cast<IdParameter*>(base.parameters[i].get());
+				ss << parameters[i]->getCondition(param->name);
+				
+				if (i != parameters.size() - 1) {
+					ss << " && ";
+				}
+			}
+		}
+		
+		return ss.str();
 	}
-};
-
-
-
-class IdParameter : public Parameter
-{
-public:
-	std::string name;
-	
-	IdParameter(std::string name) :
-		name(name) {}
-
-	bool isId() const
-	{
-		return true;
-	}
-
-    void accept(Generator * generator)
-	{
-		generator->generate(*this);
-	}
-};
-
-class NumberParameter : public Parameter
-{
-public:
-	NUMBER_T value;
-	
-	NumberParameter(NUMBER_T value):
-		value(value) {}
 	
 	void accept(Generator * generator)
 	{
 		generator->generate(*this);
 	}
 };
-
-class EpsilonParameter : public NumberParameter
-{
-public:
-	NUMBER_T epsilon;
-	
-	EpsilonParameter(NUMBER_T value, NUMBER_T epsilon) :
-		NumberParameter(value), epsilon(epsilon) {}
-
-	void accept(Generator * generator)
-	{
-		generator->generate(*this);
-	}
-};
-
 
 class Lambda : public Statement
 {
