@@ -20,6 +20,7 @@ class Number;
 class Lambda;
 class FunctionCall;
 class Assignment;
+class VariableDecl;
 
 
 class Generator
@@ -49,5 +50,7 @@ public:
 	
 	void generate(FunctionCall & functionCall);
 	
-	void generate(Assignment & assignment);
+	void generate(Assignment & assignment);	
+	
+	void generate(VariableDecl & varDecl);
 };

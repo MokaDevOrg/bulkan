@@ -123,10 +123,15 @@ class VariableDecl : public Statement
 {
 public:
 	std::string name;
-	Expression expression;
+	std::shared_ptr<Expression> expression;
 	
-	VariableDecl(std::string name, Expression expression) :
+	VariableDecl(std::string name, std::shared_ptr<Expression> expression) :
 		name(name), expression(expression) {}
+		
+	void accept(Generator * generator)
+	{
+		generator->generate(*this);
+	}
 };
 
 class Assignment : public Statement

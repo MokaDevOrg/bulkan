@@ -1,4 +1,5 @@
 func(a) =
+	let h = g()
 	a = 4
 	a + 2;
 

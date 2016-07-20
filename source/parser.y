@@ -154,7 +154,7 @@ idParameterList:
 variableDecl:
 	LET ID '=' expression
 	{
-		$$ = new VariableDecl(*$2, *$4);
+		$$ = new VariableDecl(*$2, std::shared_ptr<Expression>($4));
 	}
 	;
 
