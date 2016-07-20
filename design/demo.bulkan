@@ -1,2 +1,5 @@
-func(a) = a + 2;
+func(a) =
+	a = 4
+	a + 2;
+
 main() = func(2);

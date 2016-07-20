@@ -19,6 +19,7 @@ class BinaryOp;
 class Number;
 class Lambda;
 class FunctionCall;
+class Assignment;
 
 
 class Generator
@@ -47,4 +48,6 @@ public:
 	void generate(Lambda & lambda);
 	
 	void generate(FunctionCall & functionCall);
+	
+	void generate(Assignment & assignment);
 };

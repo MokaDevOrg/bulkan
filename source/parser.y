@@ -161,7 +161,7 @@ variableDecl:
 assignment:
 	ID '=' expression
 	{
-		$$ = new Assignment(*$1, *$3);
+		$$ = new Assignment(*$1, std::shared_ptr<Expression>($3));
 	}
 	;
 

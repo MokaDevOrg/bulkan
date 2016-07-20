@@ -158,3 +158,11 @@ void Generator::generate(FunctionCall & functionCall)
 	
 	context.out() << ")";
 }
+
+void Generator::generate(Assignment & assignment)
+{
+	context.getScope()->assertSymbol(assignment.name);
+	
+	context.out() << assignment.name << " = ";
+	assignment.expression->accept(this);
+}

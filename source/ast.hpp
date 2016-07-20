@@ -132,10 +132,15 @@ class Assignment : public Statement
 {
 public:
 	std::string name;
-	Expression expression;
+	std::shared_ptr<Expression> expression;
 	
-	Assignment(std::string name, Expression expression) :
+	Assignment(std::string name, std::shared_ptr<Expression> expression) :
 		name(name), expression(expression) {}
+	
+	void accept(Generator * generator)
+	{
+		generator->generate(*this);
+	}
 };
 
 
