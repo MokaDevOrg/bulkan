@@ -10,6 +10,7 @@ typedef double NUMBER_T;
 
 class Parameter {
 public:
+	virtual bool isId() { return false; }
 	virtual void accept(Generator * generator) {}
 };
 
@@ -52,6 +53,17 @@ public:
 		block.topLevel = true;
 	}
 	
+	bool isSpecification() const
+	{
+		for (auto& parameter : parameters) {
+			if (!parameter->isId()) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	void accept(Generator * generator)
 	{
 		generator->generate(*this);
@@ -67,6 +79,11 @@ public:
 	
 	IdParameter(std::string name) :
 		name(name) {}
+
+	bool isId() const
+	{
+		return true;
+	}
 
     void accept(Generator * generator)
 	{
