@@ -18,6 +18,7 @@ void Generator::generate(Function & function)
 	
 	if (function.name == "main") {
 		context.out() << "int ";
+		function.block.inMain = true;
 	} else {
 		context.out() << "double ";
 	}
@@ -45,8 +46,8 @@ void Generator::generate(Function & function)
 
 void Generator::generate(IdParameter & parameter)
 {
-	context.out() << parameter.name;
 	context.getScope()->addSymbol(parameter.name, false);
+	context.out() << parameter.name;
 }
 
 void Generator::generate(NumberParameter & parameter)
@@ -63,13 +64,17 @@ void Generator::generate(Block & block)
 {
 	for (int i = 0; i < block.statements.size(); i++) {
 		context.out() << "    ";
-		
-		if (i == block.statements.size() - 1) {
+
+		if (block.topLevel && !block.inMain && i == block.statements.size() - 1) {
 			context.out() << "return ";
 		}
-		
+
 		block.statements[i]->accept(this);
 		context.out() << ";" << std::endl;
+	}
+	
+	if (block.inMain) {
+		context.out() << "    return 0;" << std::endl;
 	}
 }
 

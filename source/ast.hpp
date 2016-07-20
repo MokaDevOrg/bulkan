@@ -28,9 +28,10 @@ class Block
 public:
 	std::vector<std::shared_ptr<Statement>> statements;
 	bool topLevel = false;
+	bool inMain = false;
 
-	Block(std::vector<std::shared_ptr<Statement>> statements) :
-		statements(statements) {}
+	Block(std::vector<std::shared_ptr<Statement>> statements, bool topLevel) :
+		statements(statements), topLevel(topLevel) {}
 
 	void accept(Generator * generator)
 	{

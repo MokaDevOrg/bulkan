@@ -70,7 +70,7 @@ program:
 function:
 	ID '(' parameterList ')' '=' statementList ';'
 	{
-		$$ = new Function(*$1, *$3, Block(*$6));
+		$$ = new Function(*$1, *$3, Block(*$6, true));
 	}
 	;
 
