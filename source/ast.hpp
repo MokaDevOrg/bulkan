@@ -10,10 +10,7 @@ typedef double NUMBER_T;
 
 class Parameter {
 public:
-	virtual void accept(Generator * generator)
-	{
-		std::cout << "GG" << std::endl;
-	}
+	virtual void accept(Generator * generator) {}
 };
 
 class Statement {};
@@ -38,7 +35,8 @@ public:
 	Function(std::string name, std::vector<std::shared_ptr<Parameter>> parameters, Block block) :
 		name(name), parameters(parameters), block(block) {}
 	
-	void accept(Generator * generator) {
+	void accept(Generator * generator)
+	{
 		generator->generate(*this);
 	}
 };
@@ -55,7 +53,6 @@ public:
 
     void accept(Generator * generator)
 	{
-		std::cout << "GG";
 		generator->generate(*this);
 	}
 };
@@ -85,7 +82,6 @@ public:
 
 	void accept(Generator * generator)
 	{
-		std::cout << "GG";
 		generator->generate(*this);
 	}
 };
@@ -95,10 +91,10 @@ class Lambda : public Statement
 {
 public:
 	std::string name;
-	std::vector<Parameter> parameters;
+	std::vector<IdParameter> parameters;
 	Expression expression;
 	
-	Lambda(std::string name, std::vector<Parameter> parameters, Expression expression) :
+	Lambda(std::string name, std::vector<IdParameter> parameters, Expression expression) :
 		name(name), parameters(parameters), expression(expression) {}
 };
 

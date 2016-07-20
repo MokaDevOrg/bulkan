@@ -25,6 +25,7 @@ void yyerror(const char * str)
 	Expression * expression;
 
 	std::vector<std::shared_ptr<Parameter>> * parameterList;
+	std::vector<IdParameter> * idParameterList;
 	std::vector<Statement> * statementList;
 	std::vector<Expression> * expressionList;
 
@@ -45,6 +46,7 @@ void yyerror(const char * str)
 %type <parameterList> parameterList
 %type <statementList> statementList
 %type <expressionList> expressionList
+%type <idParameterList> idParameterList
 
 
 %left PLUS SUB
@@ -132,9 +134,20 @@ statement:
 	;
 
 lambda:
-	LET ID '(' parameterList ')' '=' expression
+	LET ID '(' idParameterList ')' '=' expression
 	{
 		$$ = new Lambda(*$2, *$4, *$7);
+	}
+	;
+
+idParameterList:
+	// empty
+	{
+		$$ = new std::vector<IdParameter>();
+	}
+	| idParameterList ID
+	{
+		$1->push_back(IdParameter(*$2));
 	}
 	;
 

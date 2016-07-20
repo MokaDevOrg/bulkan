@@ -11,16 +11,22 @@ void Generator::generate(std::vector<Function> functions)
 
 void Generator::generate(Function & function)
 {
-	std::cout << "double " << function.name;
-	std::cout << "(";
+	if (function.name == "main") {
+		std::cout << "int ";
+	} else {
+		std::cout << "double ";
+	}
 	
+	std::cout << function.name;
+	std::cout << "(";
+
 	for (int i = 0; i < function.parameters.size(); i++) {
 		if (i > 0) {
 			std::cout << ", ";
 		}
 		
 		std::cout << "double ";
-		function.parameters[i].accept(this);
+		function.parameters[i]->accept(this);
 	}
 	
 	std::cout << ")" << std::endl;
