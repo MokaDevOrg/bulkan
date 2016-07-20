@@ -11,5 +11,32 @@ void Generator::generate(std::vector<Function> functions)
 
 void Generator::generate(Function & function)
 {
-	std::cout << function.name << std::endl;
+	std::cout << "double " << function.name;
+	std::cout << "(";
+	
+	for (int i = 0; i < function.parameters.size(); i++) {
+		if (i > 0) {
+			std::cout << ", ";
+		}
+		
+		std::cout << "double ";
+		function.parameters[i].accept(this);
+	}
+	
+	std::cout << ")" << std::endl;
+}
+
+void Generator::generate(IdParameter & parameter)
+{
+	std::cout << parameter.name;
+}
+
+void Generator::generate(NumberParameter & parameter)
+{
+	
+}
+
+void Generator::generate(EpsilonParameter & parameter)
+{
+	
 }

@@ -7,7 +7,14 @@
 typedef double NUMBER_T;
 
 
-class Parameter {};
+class Parameter {
+public:
+	virtual void accept(Generator * generator)
+	{
+		std::cout << "GG" << std::endl;
+	}
+};
+
 class Statement {};
 class Expression {};
 
@@ -44,6 +51,12 @@ public:
 	
 	IdParameter(std::string name) :
 		name(name) {}
+
+    void accept(Generator * generator)
+	{
+		std::cout << "GG";
+		generator->generate(*this);
+	}
 };
 
 class NumberParameter : public Parameter
@@ -53,6 +66,12 @@ public:
 	
 	NumberParameter(NUMBER_T value):
 		value(value) {}
+	
+	void accept(Generator * generator)
+	{
+		std::cout << "GG";
+		generator->generate(*this);
+	}
 };
 
 class EpsilonParameter : public NumberParameter
@@ -62,6 +81,12 @@ public:
 	
 	EpsilonParameter(NUMBER_T value, NUMBER_T epsilon) :
 		NumberParameter(value), epsilon(epsilon) {}
+
+	void accept(Generator * generator)
+	{
+		std::cout << "GG";
+		generator->generate(*this);
+	}
 };
 
 
