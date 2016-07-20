@@ -9,7 +9,7 @@ int yydebug = 0;
 
 extern int yylex();
 
-std::vector<Function> functions;
+extern std::vector<Function> functions;
 
 void yyerror(const char * str)
 {

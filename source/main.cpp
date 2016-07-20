@@ -5,11 +5,15 @@
 
 extern int yyparse();
 
-extern std::vector<Function*> functions;
+std::vector<Function> functions;
 
 int main(int argc, char **argv)
 {
 	yyparse();
+	
+	for (auto i : functions) {
+		
+	}
 
 	return 0;
 }
