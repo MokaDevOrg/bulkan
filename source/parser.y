@@ -133,28 +133,28 @@ statement:
 lambda:
 	LET ID '(' parameterList ')' '=' expression
 	{
-		$$ = new Lambda($2, $4, $7);
+		$$ = new Lambda(*$2, *$4, *$7);
 	}
 	;
 
 variableDecl:
 	LET ID '=' expression
 	{
-		$$ = new VariableDecl($2, $4);
+		$$ = new VariableDecl(*$2, *$4);
 	}
 	;
 
 assignment:
 	ID '=' expression
 	{
-		$$ = new Assignment($1, $3);
+		$$ = new Assignment(*$1, *$3);
 	}
 	;
 
 expressionStatement:
 	expression
 	{
-		$$ = new ExpressionStatement($1);
+		$$ = new ExpressionStatement(*$1);
 	}
 	;
 
@@ -165,36 +165,36 @@ expression:
 	}
 	| ID
 	{
-		$$ = new Id($1);
+		$$ = new Id(*$1);
 	}
 	| functionCall
 	| expression PLUS expression
 	{
-		$$ = new BinaryOp($1, "+", $3);
+		$$ = new BinaryOp(*$1, "+", *$3);
 	}
 	| expression SUB expression
 	{
-		$$ = new BinaryOp($1, "-", $3);
+		$$ = new BinaryOp(*$1, "-", *$3);
 	}
 	| expression MULT expression
 	{
-		$$ = new BinaryOp($1, "*", $3);
+		$$ = new BinaryOp(*$1, "*", *$3);
 	}
 	| expression DIV expression
 	{
-		$$ = new BinaryOp($1, "/", $3);
+		$$ = new BinaryOp(*$1, "/", *$3);
 	}
 	| expression EXP expression
 	{
-		$$ = new BinaryOp($1, "^", $3);
+		$$ = new BinaryOp(*$1, "^", *$3);
 	}
 	| expression INTDIV expression
 	{
-		$$ = new BinaryOp($1, "//", $3);
+		$$ = new BinaryOp(*$1, "//", *$3);
 	}
 	| expression MOD expression
 	{
-		$$ = new BinaryOp($1, "%", $3);
+		$$ = new BinaryOp(*$1, "%", *$3);
 	}
 	| '(' expression ')'
 	{
@@ -205,7 +205,7 @@ expression:
 functionCall:
 	ID '(' expressionList ')'
 	{
-		$$ = new FunctionCall($1, $3);
+		$$ = new FunctionCall(*$1, *$3);
 	}
 	;
 

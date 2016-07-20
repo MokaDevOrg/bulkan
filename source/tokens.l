@@ -3,8 +3,8 @@
 	#include <string>
 	#include <vector>
 	
-	#include "parser.hpp"
 	#include "ast.hpp"
+	#include "parser.hpp"
 	#include "Registry.hpp"
 	
 	#define TOKEN(X) { return X; }
