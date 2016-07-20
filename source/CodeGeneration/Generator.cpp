@@ -153,21 +153,26 @@ void Generator::generate(Lambda & lambda)
 	context.toBody();
 	context.popScope();
 	
-	context.out() << "// lambda defined: " << lambda.name;
+	context.out() << "// lambda created: " << lambda.name;
 }
 
 void Generator::generate(FunctionCall & functionCall)
 {
-	// TODO: search lambda and then functions.
+	// TODO: implement this as soon getFunction works properly.
+	size_t parameterCount;
+	
+	// TODO: search lambdas first and then functions.
 	if (context.hasFunction(functionCall.name)) {
 		context.out() << functionCall.name << "(";
 	} else {
 		context.getScope()->assertLambda(functionCall.name, functionCall.line);
 
-		auto functionName = context.getFunction().name;
+		auto functionName = context.getFunction().getRealName();
 		context.out() << functionName << "__" << functionCall.name << "(";
 	}
 	
+	// TODO: check parameters count.
+
 	for (int i = 0; i < functionCall.expressionList.size(); i++) {
 		if (i > 0) {
 			context.out() << ", ";
