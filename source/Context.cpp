@@ -20,12 +20,12 @@ Function * FunctionBundle::getBase()
 void FunctionBundle::addFunction(Function * function)
 {
 	assert(function->parameters.size() == argCount);
-	
+
 	if (function->isSpecification() && getBase() != nullptr) {
 		std::cout << "There cannot be 2 base functions of the same." << std::endl;
 		exit(1);
 	}
-	
+
 	std::stringstream ss;
 	ss << function->name;
 	

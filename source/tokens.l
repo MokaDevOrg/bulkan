@@ -7,6 +7,8 @@
 	#include "parser.hpp"
 	#include "Registry.hpp"
 	
+	extern size_t yyline;
+	
 	#define TOKEN(X) { return X; }
 %}
 
@@ -30,8 +32,8 @@ log						TOKEN(LOG);
 \'                     	BEGIN(S_STRING);
 #						BEGIN(S_COMMENT);
 
-\n                      /* ignore EOL */;
-[ \t]+                  /* ignore whitespace */;
+\n                     	/* ignore EOL */ yyline++;
+[ \t]+                 	/* ignore whitespace */;
 
 .						return (int) yytext[0];
 

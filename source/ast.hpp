@@ -9,9 +9,13 @@
 
 typedef double NUMBER_T;
 
+extern size_t yyline;
+
 
 class Parameter {
 public:
+	size_t line = yyline;
+	
 	virtual bool isId()
 	{
 		return false;
@@ -28,11 +32,15 @@ public:
 
 class Statement {
 public:
+	size_t line = yyline;
+	
 	virtual void accept(Generator * generator) {}
 };
 
 class Expression {
 public:
+	size_t line = yyline;
+	
 	virtual void accept(Generator * generator) {}
 };
 
@@ -42,6 +50,8 @@ public:
 	std::vector<std::shared_ptr<Statement>> statements;
 	bool topLevel = false;
 	bool inMain = false;
+	
+	size_t line = yyline;
 
 	Block(std::vector<std::shared_ptr<Statement>> statements, bool topLevel) :
 		statements(statements), topLevel(topLevel) {}
