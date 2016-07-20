@@ -30,7 +30,7 @@ public:
 
 
 
-class IdParameter : Parameter
+class IdParameter : public Parameter
 {
 public:
 	std::string name;
@@ -39,7 +39,7 @@ public:
 		name(name) {}
 };
 
-class NumberParameter : Parameter
+class NumberParameter : public Parameter
 {
 public:
 	NUMBER_T value;
@@ -48,7 +48,7 @@ public:
 		value(value) {}
 };
 
-class EpsilonParameter : NumberParameter
+class EpsilonParameter : public NumberParameter
 {
 public:
 	NUMBER_T epsilon;
@@ -58,7 +58,7 @@ public:
 };
 
 
-class Lambda : Statement
+class Lambda : public Statement
 {
 public:
 	std::string name;
@@ -69,7 +69,7 @@ public:
 		name(name), parameters(parameters), expression(expression) {}
 };
 
-class VariableDecl : Statement
+class VariableDecl : public Statement
 {
 public:
 	std::string name;
@@ -79,7 +79,7 @@ public:
 		name(name), expression(expression) {}
 };
 
-class Assignment : Statement
+class Assignment : public Statement
 {
 public:
 	std::string name;
@@ -90,7 +90,7 @@ public:
 };
 
 
-class ExpressionStatement : Statement
+class ExpressionStatement : public Statement
 {
 public:
 	Expression expression;
@@ -99,7 +99,7 @@ public:
 		expression(expression) {}
 };
 
-class Number : Expression
+class Number : public Expression
 {
 public:
 	NUMBER_T value;
@@ -108,7 +108,7 @@ public:
 		value(value) {}
 };
 
-class Id : Expression
+class Id : public Expression
 {
 public:
 	std::string name;
@@ -117,7 +117,7 @@ public:
 		name(name) {}
 };
 
-class FunctionCall : Expression
+class FunctionCall : public Expression
 {
 public:
 	std::string value;
@@ -127,7 +127,7 @@ public:
 		value(value), expressionList(expressionList) {}
 };
 
-class BinaryOp : Expression
+class BinaryOp : public Expression
 {
 public:
 	Expression left;
