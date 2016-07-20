@@ -3,6 +3,7 @@
 #include <vector>
 #include <iostream>
 #include <string>
+#include <sstream>
 
 #include "../Context.hpp"
 

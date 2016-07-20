@@ -229,13 +229,17 @@ class Log : public Statement
 {
 public:
 	std::shared_ptr<Expression> expression;
-	
+	std::string string;
+
 	Log(std::shared_ptr<Expression> expression) :
 		expression(expression) {}
 	
+	Log(std::string string) :
+		string(string) {}
+
 	void accept(Generator * generator)
 	{
-		expression->accept(generator);
+		generator->generate(*this);
 	}
 };
 
@@ -290,7 +294,7 @@ public:
 	std::shared_ptr<Expression> left;
 	std::shared_ptr<Expression> right;
 	std::string op;
-	
+
 	BinaryOp(std::shared_ptr<Expression> left, std::string op, std::shared_ptr<Expression> right) :
 		left(left), op(op), right(right) {}
 

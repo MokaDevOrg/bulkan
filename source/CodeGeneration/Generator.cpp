@@ -189,7 +189,6 @@ void Generator::generate(Assignment & assignment)
 
 void Generator::generate(VariableDecl & varDecl)
 {	
-	std::cerr << "GG";
 	context.getScope()->addSymbol(varDecl.name, false);
 	
 	context.out() << "double ";
@@ -200,5 +199,46 @@ void Generator::generate(VariableDecl & varDecl)
 
 void Generator::generate(Log & log)
 {
-	
+	if (log.expression) {
+		context.out() << "printf(\"%lf\\n\", ";
+		log.expression->accept(this);
+		context.out() << ")";
+	} else {
+		std::ostringstream buffer;
+		std::ostringstream idBuffer;
+		std::vector<std::string> ids;
+		
+		bool readId = false;
+		for (char i : log.string) {
+			if (i == '$') {
+				readId = true;
+			} else if(readId) {
+				if (std::isalnum(i)) {
+					idBuffer << i;
+				} else {
+					readId = false;
+					ids.push_back(idBuffer.str());
+					idBuffer.str("");
+					buffer << "%lf" << i;
+				}
+			} else {
+				buffer << i;
+			}
+		}
+		
+		if (readId) {
+			ids.push_back(idBuffer.str());
+			buffer << "%lf";
+		}
+
+		context.out() << "printf(\"" << buffer.str() << "\\n\"";
+		
+		for (auto id : ids) {
+			context.getScope()->assertSymbol(id);
+			
+			context.out() << ", " << id;
+		}
+		
+		context.out() << ")";
+	}
 }

@@ -13,6 +13,7 @@
 %option noyywrap
 
 %x S_COMMENT
+%x S_STRING
 
 %%
 let						TOKEN(LET);
@@ -26,6 +27,7 @@ log						TOKEN(LOG);
 \/						TOKEN(DIV);
 \^						TOKEN(EXP);
 %						TOKEN(MOD);
+\'                     	BEGIN(S_STRING);
 #						BEGIN(S_COMMENT);
 
 \n                      /* ignore EOL */;
@@ -34,4 +36,7 @@ log						TOKEN(LOG);
 .						return (int) yytext[0];
 
 <S_COMMENT>[^\n]*      	BEGIN(INITIAL);
+
+<S_STRING>[^\']*       	{ yylval.id = registry.get(yytext, yyleng); TOKEN(STRING); }
+<S_STRING>\'           	BEGIN(INITIAL);
 %%
