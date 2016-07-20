@@ -166,3 +166,12 @@ void Generator::generate(Assignment & assignment)
 	context.out() << assignment.name << " = ";
 	assignment.expression->accept(this);
 }
+
+void Generator::generate(VariableDecl & varDecl)
+{	
+	context.getScope()->addSymbol(varDecl.name, false);
+	
+	context.out() << "double ";
+	context.out() << varDecl.name << " = ";
+	varDecl.expression->accept(this);
+}
