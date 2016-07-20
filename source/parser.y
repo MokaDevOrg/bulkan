@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <memory>
 
 #include "ast.hpp"
 
@@ -23,7 +24,7 @@ void yyerror(const char * str)
 	Statement * statement;
 	Expression * expression;
 
-	std::vector<Parameter> * parameterList;
+	std::vector<std::shared_ptr<Parameter>> * parameterList;
 	std::vector<Statement> * statementList;
 	std::vector<Expression> * expressionList;
 
@@ -74,34 +75,34 @@ function:
 parameterList:
 	// empty
 	{
-		$$ = new std::vector<Parameter>();
+		$$ = new std::vector<std::shared_ptr<Parameter>>();
 	}
 	| parameterList ',' ID
 	{
-		$1->push_back(IdParameter(*$3));
+		$1->push_back(std::make_shared<IdParameter>(*$3));
 	}
 	| parameterList ',' NUMBER
 	{
-		$1->push_back(NumberParameter($3));
+		$1->push_back(std::make_shared<NumberParameter>($3));
 	}
 	| parameterList ',' epsilon
 	{
-		$1->push_back(*$3);
+		$1->push_back(std::shared_ptr<Parameter>($3));
 	}
 	| ID
 	{
-		$$ = new std::vector<Parameter>();
-		$$->push_back(IdParameter(*$1));
+		$$ = new std::vector<std::shared_ptr<Parameter>>();
+		$$->push_back(std::make_shared<IdParameter>(*$1));
 	}
 	| NUMBER
 	{
-		$$ = new std::vector<Parameter>();
-		$$->push_back(NumberParameter($1));
+		$$ = new std::vector<std::shared_ptr<Parameter>>();
+		$$->push_back(std::make_shared<NumberParameter>($1));
 	}
 	| epsilon
 	{
-		$$ = new std::vector<Parameter>();
-		$$->push_back(*$1);
+		$$ = new std::vector<std::shared_ptr<Parameter>>();
+		$$->push_back(std::shared_ptr<Parameter>($1));
 	}
 	;
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <memory>
 
 #include "CodeGeneration/Generator.hpp"
 
@@ -31,10 +32,10 @@ class Function
 {
 public:
 	std::string name;
-	std::vector<Parameter> parameters;
+	std::vector<std::shared_ptr<Parameter>> parameters;
 	Block block;
 
-	Function(std::string name, std::vector<Parameter> parameters, Block block) :
+	Function(std::string name, std::vector<std::shared_ptr<Parameter>> parameters, Block block) :
 		name(name), parameters(parameters), block(block) {}
 	
 	void accept(Generator * generator) {
