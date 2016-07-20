@@ -187,4 +187,6 @@ public:
 		scope->parent.reset();
 		scope = parent;
 	}
+	
+	void generateFunctionDummies();
 };

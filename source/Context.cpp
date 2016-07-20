@@ -37,3 +37,12 @@ void Context::addFunction(Function * function)
 	functions[function->name].addFunction(function);
 	lastFunction = function;
 }
+
+void Context::generateFunctionDummies()
+{
+	typedef std::map<std::string, FunctionBundle>::iterator it_type;
+	for(it_type it = functions.begin(); it != functions.end(); it++) {
+		FunctionBundle & functionBundle = it->second;
+
+	}
+}

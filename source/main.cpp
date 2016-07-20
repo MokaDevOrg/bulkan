@@ -30,7 +30,7 @@ int main(int argc, char **argv)
 	std::cout << generator.context.out().str();
 	
 	// Function dummies
-	generator.generateFunctionDummies();
+	generator.context.generateFunctionDummies();
 	
 	return 0;
 }
