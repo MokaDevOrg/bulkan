@@ -189,10 +189,12 @@ void Generator::generate(Assignment & assignment)
 
 void Generator::generate(VariableDecl & varDecl)
 {	
+	std::cerr << "GG";
 	context.getScope()->addSymbol(varDecl.name, false);
 	
 	context.out() << "double ";
 	context.out() << varDecl.name << " = ";
+
 	varDecl.expression->accept(this);
 }
 

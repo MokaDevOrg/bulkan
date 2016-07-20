@@ -188,6 +188,11 @@ public:
 	
 	VariableDecl(std::string name, std::shared_ptr<Expression> expression) :
 		name(name), expression(expression) {}
+	
+	void accept(Generator * generator)
+	{
+		generator->generate(*this);
+	}
 };
 
 class Assignment : public Statement
