@@ -29,5 +29,8 @@ int main(int argc, char **argv)
 	generator.context.toBody();
 	std::cout << generator.context.out().str();
 	
+	// Function dummies
+	generator.generateFunctionDummies();
+	
 	return 0;
 }

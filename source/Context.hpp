@@ -12,6 +12,7 @@ class FunctionBundle
 {
 private:
 	std::string sym;
+	int argCount;
 	std::vector<Function*> impls;
 
 public:
@@ -19,26 +20,14 @@ public:
 	{
 	}
 	
-	FunctionBundle(std::string sym) :
-		sym(sym)
+	FunctionBundle(std::string sym, int argCount) :
+		sym(sym), argCount(argCount)
 	{
 	}
 	
-	Function * getBase()
-	{
-		for (Function * function : impls) {
-			if (function->isSpecification()) {
-				return function;
-			}
-		}
+	Function * getBase();
 		
-		return nullptr;
-	}
-	
-	void addFunction(Function * function)
-	{
-		impls.push_back(function);
-	}
+	void addFunction(Function * function);
 };
 
 class Scope
@@ -153,10 +142,10 @@ public:
 		return true;
 	}
 
-	/*Function & getFunction(std::string name)
+	FunctionBundle & getFunctionBundle(std::string name)
 	{
-		return *functions[name];
-	}*/
+		return functions[name];
+	}
 	
 	Function & getFunction()
 	{

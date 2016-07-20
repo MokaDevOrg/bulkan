@@ -56,4 +56,6 @@ public:
 	void generate(VariableDecl & varDecl);
 	
 	void generate(Log & log);
+	
+	void generateFunctionDummies();
 };

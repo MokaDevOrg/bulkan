@@ -115,29 +115,44 @@ public:
 
 class Function
 {
+private:
+	bool isSpecificationCache;
+	bool isSpecificationCached;
+	
+	std::string realName;
+	bool realNameSet;
+	
 public:
 	std::string name;
 	std::vector<std::shared_ptr<Parameter>> parameters;
 	Block block;
 
 	Function(std::string name, std::vector<std::shared_ptr<Parameter>> parameters, Block block) :
-		name(name), parameters(parameters), block(block)
+		isSpecificationCached(false), realNameSet(false), name(name), parameters(parameters), block(block)
 	{
 		block.topLevel = true;
 	}
 	
-	bool isSpecification() const
+	bool isSpecification()
 	{
+		if (isSpecificationCached) {
+			return isSpecificationCache;
+		}
+		
 		for (auto& parameter : parameters) {
 			if (!parameter->isId()) {
-				return true;
+				isSpecificationCached = true;
+				break;
 			}
 		}
 		
-		return false;
+		isSpecificationCache = isSpecificationCached;
+		isSpecificationCached = true;
+		
+		return isSpecificationCache;
 	}
 	
-	std::string getCondition(const Function& base)
+	std::string getCondition(Function& base)
 	{
 		assert(!base.isSpecification());
 		assert(this != &base);
@@ -156,6 +171,18 @@ public:
 		}
 		
 		return ss.str();
+	}
+	
+	void setRealName(std::string realName)
+	{
+		assert(!realNameSet);
+		realNameSet = true;
+		this->realName = realName;
+	}
+	
+	std::string getRealName() const
+	{
+		return realName;
 	}
 	
 	void accept(Generator * generator)

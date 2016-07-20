@@ -20,7 +20,7 @@ void renderFunctionHeader(Generator * generator, Context & context, Function & f
 		context.out() << "double ";
 	}
 
-	context.out() << function.name;
+	context.out() << function.getRealName();
 	context.out() << "(";
 
 	for (int i = 0; i < function.parameters.size(); i++) {
