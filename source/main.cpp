@@ -5,7 +5,7 @@
 
 extern int yyparse();
 
-static std::vector<Function*> functions;
+extern std::vector<Function*> functions;
 
 int main(int argc, char **argv)
 {
