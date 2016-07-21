@@ -6,8 +6,6 @@
 
 #include "ast.hpp"
 
-int yydebug = 0;
-
 size_t yyline = 1;
 
 extern int yylex();
@@ -55,8 +53,8 @@ void yyerror(const char * str)
 %left PLUS SUB
 %left MULT DIV INTDIV MOD
 %left EXP
-%right ID '('
 
+%right ID '('
 
 %start program
 
