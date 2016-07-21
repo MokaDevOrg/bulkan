@@ -43,7 +43,7 @@ void yyerror(const char * str)
 
 
 %type <function> function
-%type <parameter> epsilon
+%type <parameter> epsilon parameter
 %type <statement> statement assignment lambda variableDecl expressionStatement log
 %type <expression> expression functionCall
 %type <parameterList> parameterList
@@ -82,32 +82,29 @@ parameterList:
 	{
 		$$ = new std::vector<std::shared_ptr<Parameter>>();
 	}
-	| parameterList ',' ID
-	{
-		$1->push_back(std::make_shared<IdParameter>(*$3));
-	}
-	| parameterList ',' NUMBER
-	{
-		$1->push_back(std::make_shared<NumberParameter>($3));
-	}
-	| parameterList ',' epsilon
+	| parameterList ',' parameter
 	{
 		$1->push_back(std::shared_ptr<Parameter>($3));
 	}
-	| ID
-	{
-		$$ = new std::vector<std::shared_ptr<Parameter>>();
-		$$->push_back(std::make_shared<IdParameter>(*$1));
-	}
-	| NUMBER
-	{
-		$$ = new std::vector<std::shared_ptr<Parameter>>();
-		$$->push_back(std::make_shared<NumberParameter>($1));
-	}
-	| epsilon
+	| parameter
 	{
 		$$ = new std::vector<std::shared_ptr<Parameter>>();
 		$$->push_back(std::shared_ptr<Parameter>($1));
+	}
+	;
+
+parameter:
+	ID
+	{
+		$$ = new IdParameter(*$1);
+	}
+	| NUMBER
+	{
+		$$ = new NumberParameter($1);
+	}
+	| epsilon
+	{
+		$$ = $1;
 	}
 	;
 
