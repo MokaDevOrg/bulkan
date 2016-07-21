@@ -20,8 +20,13 @@
 %%
 let						TOKEN(LET);
 log						TOKEN(LOG);
+assert					TOKEN(ASSERT);
 [0-9]+(\.[0-9]*)?      	{ yylval.number = std::stof(yytext); return NUMBER; }
 [a-zA-Z][a-zA-Z0-9]*   	{ yylval.id = registry.get(yytext, yyleng); return ID; }
+==						TOKEN(EQUALS);
+!=						TOKEN(NOT_EQUALS);
+\<=						TOKEN(LESS_EQUAL);
+\>=						TOKEN(GREATER_EQUAL);
 \+						TOKEN(PLUS);
 -						TOKEN(SUB);
 \*						TOKEN(MULT);

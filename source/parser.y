@@ -35,7 +35,7 @@ void yyerror(const char * str)
 }
 
 
-%token LET LOG PLUS MULT DIV INTDIV MOD EXP SUB PLUS_MINUS
+%token LET LOG ASSERT EQUALS PLUS MULT DIV INTDIV MOD EXP SUB PLUS_MINUS
 %token <id> ID STRING
 %token <number> NUMBER
 
@@ -50,6 +50,8 @@ void yyerror(const char * str)
 %type <idParameterList> idParameterList
 
 
+%left EQUALS NOT_EQUALS
+%left LESS_EQUAL GREATER_EQUAL '<' '>'
 %left PLUS SUB
 %left MULT DIV INTDIV MOD
 %left EXP
@@ -208,6 +210,30 @@ expression:
 	| expression MOD expression
 	{
 		$$ = new BinaryOp(std::shared_ptr<Expression>($1), "%", std::shared_ptr<Expression>($3));
+	}
+	| expression EQUALS expression
+	{
+		$$ = new BinaryOp(std::shared_ptr<Expression>($1), "==", std::shared_ptr<Expression>($3));
+	}
+	| expression NOT_EQUALS expression
+	{
+		$$ = new BinaryOp(std::shared_ptr<Expression>($1), "!=", std::shared_ptr<Expression>($3));
+	}
+	| expression LESS_EQUAL expression
+	{
+		$$ = new BinaryOp(std::shared_ptr<Expression>($1), "<=", std::shared_ptr<Expression>($3));
+	}
+	| expression GREATER_EQUAL expression
+	{
+		$$ = new BinaryOp(std::shared_ptr<Expression>($1), ">=", std::shared_ptr<Expression>($3));
+	}
+	| expression '<' expression
+	{
+		$$ = new BinaryOp(std::shared_ptr<Expression>($1), "<", std::shared_ptr<Expression>($3));
+	}
+	| expression '>' expression
+	{
+		$$ = new BinaryOp(std::shared_ptr<Expression>($1), ">", std::shared_ptr<Expression>($3));
 	}
 	| '(' expression ')'
 	{
