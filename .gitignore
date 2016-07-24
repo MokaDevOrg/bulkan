@@ -2,3 +2,4 @@
 .idea/
 bin/*
 bulkan/gen/*
+!**/.gitkeep
