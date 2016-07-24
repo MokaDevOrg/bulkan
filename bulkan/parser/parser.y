@@ -4,7 +4,7 @@
 #include <vector>
 #include <memory>
 
-#include "ast.hpp"
+#include "../ast.hpp"
 
 size_t yyline = 1;
 

@@ -1,8 +1,8 @@
 #include <iostream>
 #include <vector>
 
-#include "CodeGeneration/Generator.hpp"
-#include "ast.hpp"
+#include "bulkan/codegen/Generator.hpp"
+#include "bulkan/ast.hpp"
 
 extern int yyparse();
 

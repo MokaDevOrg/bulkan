@@ -3,9 +3,9 @@
 	#include <string>
 	#include <vector>
 	
-	#include "ast.hpp"
-	#include "parser.hpp"
-	#include "Registry.hpp"
+	#include "../ast.hpp"
+	#include "../gen/parser.hpp"
+	#include "../Registry.hpp"
 	
 	extern size_t yyline;
 	

@@ -5,7 +5,7 @@
 #include <cassert>
 #include <sstream>
 
-#include "CodeGeneration/Generator.hpp"
+#include "codegen/Generator.hpp"
 
 typedef double NUMBER_T;
 
