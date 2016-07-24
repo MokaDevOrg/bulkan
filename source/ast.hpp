@@ -364,6 +364,21 @@ public:
 	}
 };
 
+class Assert : public Statement
+{
+public:
+	std::shared_ptr<Expression> expression;
+	std::string errorMessage;
+
+	Assert(std::shared_ptr<Expression> expression, std::string errorMessage) :
+		expression(expression), errorMessage(errorMessage) {}
+
+	void accept(Generator * generator)
+	{
+		generator->generate(*this);
+	}
+};
+
 
 class Number : public Expression
 {

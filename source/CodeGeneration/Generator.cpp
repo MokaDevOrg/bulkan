@@ -202,48 +202,68 @@ void Generator::generate(VariableDecl & varDecl)
 	varDecl.expression->accept(this);
 }
 
+void interpolateString(Context & context, std::string string, int line)
+{
+	std::ostringstream buffer;
+	std::ostringstream idBuffer;
+	std::vector<std::string> ids;
+	
+	bool readId = false;
+	for (char i : string) {
+		if (i == '$') {
+			readId = true;
+		} else if(readId) {
+			if (std::isalnum(i)) {
+				idBuffer << i;
+			} else {
+				readId = false;
+				ids.push_back(idBuffer.str());
+				idBuffer.str("");
+				buffer << "%lf" << i;
+			}
+		} else {
+			buffer << i;
+		}
+	}
+	
+	if (readId) {
+		ids.push_back(idBuffer.str());
+		buffer << "%lf";
+	}
+
+	context.out() << buffer.str() << "\\n\"";
+	
+	for (auto id : ids) {
+		context.getScope()->assertSymbol(id, line);
+		
+		context.out() << ", " << id;
+	}
+}
+
 void Generator::generate(Log & log)
 {
+	context.out() << "printf(\"";
+	
 	if (log.expression) {
-		context.out() << "printf(\"%lf\\n\", ";
+		context.out() << "%lf\\n\", ";
 		log.expression->accept(this);
-		context.out() << ")";
 	} else {
-		std::ostringstream buffer;
-		std::ostringstream idBuffer;
-		std::vector<std::string> ids;
-		
-		bool readId = false;
-		for (char i : log.string) {
-			if (i == '$') {
-				readId = true;
-			} else if(readId) {
-				if (std::isalnum(i)) {
-					idBuffer << i;
-				} else {
-					readId = false;
-					ids.push_back(idBuffer.str());
-					idBuffer.str("");
-					buffer << "%lf" << i;
-				}
-			} else {
-				buffer << i;
-			}
-		}
-		
-		if (readId) {
-			ids.push_back(idBuffer.str());
-			buffer << "%lf";
-		}
-
-		context.out() << "printf(\"" << buffer.str() << "\\n\"";
-		
-		for (auto id : ids) {
-			context.getScope()->assertSymbol(id, log.line);
-			
-			context.out() << ", " << id;
-		}
-		
-		context.out() << ")";
+		interpolateString(context, log.string, log.line);
 	}
+	
+	context.out() << ")";
+}
+
+void Generator::generate(Assert & assert)
+{
+	// if (!expression) {
+	// 		printf(STRING);
+	// 		exit(134);
+	// }
+	
+	context.out() << "if (!";
+	assert.expression->accept(this);
+	context.out() << ") { printf(\"";
+	interpolateString(context, assert.errorMessage, assert.line);
+	context.out() << "); exit(134); }";
 }

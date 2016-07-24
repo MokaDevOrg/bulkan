@@ -23,6 +23,7 @@ class FunctionCall;
 class Assignment;
 class VariableDecl;
 class Log;
+class Assert;
 
 
 class Generator
@@ -57,4 +58,6 @@ public:
 	void generate(VariableDecl & varDecl);
 	
 	void generate(Log & log);
+	
+	void generate(Assert & assert);
 };
