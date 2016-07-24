@@ -1,5 +1,6 @@
 .DS_Store
 .idea/
+.vscode/
 *.o
 parser
 parser.cpp
