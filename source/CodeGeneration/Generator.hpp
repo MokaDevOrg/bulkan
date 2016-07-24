@@ -30,7 +30,7 @@ class Generator
 public:
 	Context context;
 	
-	void generate(std::vector<Function> functions);
+	void generate(std::vector<Function*> functions);
 
 	void generate(Function & function);
 

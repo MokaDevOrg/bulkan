@@ -9,7 +9,7 @@ Function * FunctionBundle::getBase()
 	
 	for (Function * function : impls) {
 		std::cout << "checking on " << function->name << std::endl;
-		if (function->isSpecification()) {
+		if (!function->isSpecification()) {
 			return function;
 		}
 	}
@@ -21,7 +21,7 @@ void FunctionBundle::addFunction(Function * function)
 {
 	assert(function->parameters.size() == argCount);
 
-	if (function->isSpecification() && getBase() != nullptr) {
+	if (!function->isSpecification() && getBase() != nullptr) {
 		std::cout << "There cannot be 2 base functions of the same." << std::endl;
 		exit(1);
 	}
