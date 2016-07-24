@@ -66,12 +66,12 @@ void Generator::generate(IdParameter & parameter)
 
 void Generator::generate(NumberParameter & parameter)
 {
-	
+	context.out() << "_" + std::to_string(increment++) + "_";
 }
 
 void Generator::generate(EpsilonParameter & parameter)
 {
-	
+	context.out() << "_" + std::to_string(increment++) + "_";
 }
 
 void Generator::generate(Block & block)

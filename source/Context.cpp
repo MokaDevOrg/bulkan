@@ -65,7 +65,7 @@ void Context::generateFunctionDummies()
 		}
 
 		// Render header
-		out() << "inline " << base->renderHeader() << std::endl << "{" << std::endl;
+		out() << base->renderHeader() << std::endl << "{" << std::endl;
 
 
 		// If length of implementations is greater than 1, then the symbol
