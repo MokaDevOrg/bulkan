@@ -27,6 +27,11 @@ public:
 		return "";
 	}
 	
+	virtual std::string render()
+	{
+		return "";
+	}
+	
 	virtual void accept(Generator * generator) {}
 };
 
@@ -75,6 +80,11 @@ public:
 		return true;
 	}
 
+	std::string render()
+	{
+		return name;
+	}
+
     void accept(Generator * generator)
 	{
 		generator->generate(*this);
@@ -96,6 +106,11 @@ public:
 		return ss.str();
 	}
 	
+	std::string render()
+	{
+		return std::to_string(value);
+	}
+	
 	void accept(Generator * generator)
 	{
 		generator->generate(*this);
@@ -114,6 +129,13 @@ public:
 	{
 		std::stringstream ss;
 		ss << id << ">=" << (value - epsilon) << " && " << id << " <= " << (value + epsilon);
+		return ss.str();
+	}
+
+	std::string render()
+	{
+		std::stringstream ss;
+		ss << value << " +- " << epsilon;
 		return ss.str();
 	}
 
@@ -168,21 +190,24 @@ public:
 		return isSpecificationCache;
 	}
 	
-	std::string getCondition(Function& base)
+	std::string getCondition(Function* base)
 	{
-		assert(!base.isSpecification());
-		assert(this != &base);
+		assert(!base->isSpecification());
+		assert(isSpecification());
 
 		std::stringstream ss;
+		bool condBefore = false;
 		
 		for (int i = 0; i < parameters.size(); i++) {
 			if (!parameters[i]->isId()) {
-				IdParameter * param = static_cast<IdParameter*>(base.parameters[i].get());
-				ss << parameters[i]->getCondition(param->name);
-				
-				if (i != parameters.size() - 1) {
+				if (condBefore) {
 					ss << " && ";
 				}
+				
+				IdParameter * param = static_cast<IdParameter*>(base->parameters[i].get());
+				ss << parameters[i]->getCondition(param->name);
+				
+				condBefore = true;
 			}
 		}
 		
@@ -199,6 +224,59 @@ public:
 	std::string getRealName() const
 	{
 		return realName;
+	}
+	
+	std::string renderHeader(bool useRealName = false)
+	{
+		// For now this should be called on a base function
+		assert(!isSpecification());
+		std::stringstream ss;
+		
+		if (name == "main") {
+			ss << "int ";
+			block.inMain = true; // ?
+		} else {
+			ss << "double ";
+		}
+
+		if (useRealName) {
+			ss << realName;
+		} else {
+			ss << name;
+		}
+		
+		ss << "(";
+
+		for (int i = 0; i < parameters.size(); i++) {
+			if (i > 0) {
+				ss << ", ";
+			}
+
+			ss << "double ";
+			
+			IdParameter* param = static_cast<IdParameter*>(parameters[i].get());
+			ss << param->name;
+		}
+		
+		ss << ")";
+		return ss.str();
+	}
+	
+	std::string renderCall()
+	{
+		std::stringstream ss;
+		ss << realName << "(";
+		
+		for (int i = 0; i < parameters.size(); i++) {
+			if (i > 0) {
+				ss << ", ";
+			}
+			
+			ss << parameters[i]->render();
+		}
+
+		ss << ");";
+		return ss.str();
 	}
 	
 	void accept(Generator * generator)

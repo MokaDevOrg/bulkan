@@ -4,7 +4,9 @@ fib(n) = fib(n - 2) + fib(n - 1);
 # fib(1) = 1;
 # fib(0) = 0;
 
-someFunc(a, b, c) = 42;
+someFunc(a, z, c) = 42;
+
+someFunc(f, 98, 32) = 12;
 
 main() = 
 	let n = 5

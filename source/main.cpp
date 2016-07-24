@@ -19,6 +19,10 @@ int main(int argc, char **argv)
 	std::cout << "#include <stdio.h>" << std::endl;
 	std::cout << std::endl;
 
+	// Function dummies
+	std::cout << "generateFunctionDummies()" << std::endl;
+	generator.context.generateFunctionDummies();
+
 	generator.context.toPrelude();
 	std::cout << "// prelude." << std::endl;
 	std::cout << generator.context.out().str();
@@ -28,10 +32,6 @@ int main(int argc, char **argv)
 	std::cout << "// body." << std::endl;
 	generator.context.toBody();
 	std::cout << generator.context.out().str();
-	
-	// Function dummies
-	std::cout << "generateFunctionDummies()" << std::endl;
-	generator.context.generateFunctionDummies();
-	
+		
 	return 0;
 }

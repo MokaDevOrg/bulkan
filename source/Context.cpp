@@ -49,16 +49,58 @@ void Context::addFunction(Function * function)
 
 void Context::generateFunctionDummies()
 {
+	toPrelude();
+	
 	for(auto it = functions.begin(); it != functions.end(); it++) {
-		//FunctionBundle & functionBundle = it->second;
-
-		std::cout << "sym: " << it->second.getSym() << std::endl;
-		for (Function * fn : it->second.getImpls()) {
-			std::cout << fn->getRealName() << std::endl;
+		FunctionBundle& bundle = it->second;
+		
+		if (bundle.isMain()) {
+			continue;
 		}
 		
-		//Function * base = functionBundle.getBase();
-		//std::cout << functionBundle.getSym() << std::endl;
-		//std::cout << base->name << std::endl;
+		Function* base = bundle.getBase();
+		
+		if (base == nullptr) {
+			std::cout << "Function with sym: " << bundle.getSym() << ", has no base." << std::endl;
+			exit(1);
+		}
+
+		// Render header
+		out() << "inline " << base->renderHeader() << std::endl << "{" << std::endl;
+
+
+		// If length of implementations is greater than 1, then the symbol
+		// has specializations, since there can only be (and must be) one base
+		// per symbol. This is controlled when anexing them to its bundle.
+		
+		if (bundle.getImpls().size() > 1) {
+			bool firstSpecialization = true;
+				
+			for (Function* function : bundle.getImpls()) {
+				// Ignore base
+				if (function == base) {
+					continue;
+				}
+
+				if (!firstSpecialization) {
+					out() << "else ";
+				}
+				
+				firstSpecialization = false; // do not get confused :D
+				
+				out() 	<< "    if (" << function->getCondition(base) << ") {" << std::endl
+						<< "        return " << function->renderCall() << std::endl << "    } ";
+			}
+			
+			out() << "else {" << std::endl << "    ";
+		}
+		
+		out() 	<< "    return " << base->renderCall() << std::endl;
+		
+		if (bundle.getImpls().size() > 1) {
+			out() << "    }" << std::endl;
+		}
+		
+		out() << "}" << std::endl << std::endl;
 	}
 }

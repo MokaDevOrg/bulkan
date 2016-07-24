@@ -38,6 +38,11 @@ public:
 	{
 		return impls;
 	}
+	
+	bool isMain() const
+	{
+		return sym == "main";
+	}
 };
 
 class Scope
