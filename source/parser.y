@@ -42,7 +42,7 @@ void yyerror(const char * str)
 
 %type <function> function
 %type <parameter> epsilon parameter
-%type <statement> statement assignment lambda variableDecl expressionStatement log
+%type <statement> statement assignment lambda variableDecl expressionStatement log assert
 %type <expression> expression functionCall
 %type <parameterList> parameterList
 %type <statementList> statementList
@@ -132,6 +132,7 @@ statement:
 	| assignment
 	| expressionStatement
 	| log
+	| assert
 	;
 
 lambda:
@@ -170,6 +171,24 @@ expressionStatement:
 	expression
 	{
 		$$ = new ExpressionStatement(std::shared_ptr<Expression>($1));
+	}
+	;
+
+log:
+	LOG expression
+	{
+		$$ = new Log(std::shared_ptr<Expression>($2));
+	}
+	| LOG STRING
+	{
+		$$ = new Log(*$2);
+	}
+	;
+
+assert:
+	ASSERT expression STRING
+	{
+		$$ = new Assert(std::shared_ptr<Expression>($2), *$3);
 	}
 	;
 
@@ -261,16 +280,5 @@ expressionList:
 	{
 		$$ = new std::vector<std::shared_ptr<Expression>>();
 		$$->push_back(std::shared_ptr<Expression>($1));
-	}
-	;
-
-log:
-	LOG expression
-	{
-		$$ = new Log(std::shared_ptr<Expression>($2));
-	}
-	| LOG STRING
-	{
-		$$ = new Log(*$2);
 	}
 	;
