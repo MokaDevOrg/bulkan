@@ -16,7 +16,7 @@ class Parameter {
 public:
 	size_t line = yyline;
 	
-	virtual bool isId()
+	virtual bool isId() const
 	{
 		return false;
 	}
@@ -140,7 +140,13 @@ public:
 	Function(std::string name, std::vector<std::shared_ptr<Parameter>> parameters, Block block) :
 		isSpecificationCached(false), realNameSet(false), name(name), parameters(parameters), block(block)
 	{
+		std::cout << "Function(" << name << ")" << std::endl;
 		block.topLevel = true;
+	}
+	
+	~Function()
+	{
+		std::cout << "~Function(" << name << ")" << std::endl;
 	}
 	
 	bool isSpecification()

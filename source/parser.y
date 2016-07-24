@@ -10,7 +10,7 @@ size_t yyline = 1;
 
 extern int yylex();
 
-extern std::vector<Function> functions;
+extern std::vector<Function*> functions;
 
 void yyerror(const char * str)
 {
@@ -66,7 +66,7 @@ program:
 	// empty
 	| program function
 	{
-		functions.push_back(*$2);
+		functions.push_back($2);
 	}
 	;
 

@@ -6,7 +6,7 @@
 
 extern int yyparse();
 
-std::vector<Function> functions;
+std::vector<Function*> functions;
 
 int main(int argc, char **argv)
 {
@@ -30,6 +30,7 @@ int main(int argc, char **argv)
 	std::cout << generator.context.out().str();
 	
 	// Function dummies
+	std::cout << "generateFunctionDummies()" << std::endl;
 	generator.context.generateFunctionDummies();
 	
 	return 0;

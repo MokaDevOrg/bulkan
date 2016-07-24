@@ -4,10 +4,10 @@
 #include "../Context.hpp"
 
 
-void Generator::generate(std::vector<Function> functions)
+void Generator::generate(std::vector<Function*> functions)
 {
 	for (auto i : functions) {
-		i.accept(this);
+		i->accept(this);
 	}
 }
 
