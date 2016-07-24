@@ -20,7 +20,6 @@ int main(int argc, char **argv)
 	std::cout << std::endl;
 
 	// Function dummies
-	std::cout << "generateFunctionDummies()" << std::endl;
 	generator.context.generateFunctionDummies();
 
 	generator.context.toPrelude();

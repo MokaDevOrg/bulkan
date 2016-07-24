@@ -8,7 +8,6 @@ Function * FunctionBundle::getBase()
 	}
 	
 	for (Function * function : impls) {
-		std::cout << "checking on " << function->name << std::endl;
 		if (!function->isSpecification()) {
 			return function;
 		}
