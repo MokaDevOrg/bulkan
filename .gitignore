@@ -8,3 +8,6 @@ parser.hpp
 tokens.cpp
 parser.output
 demo
+bin/*
+bulkan/gen/*
+!**/.gitkeep

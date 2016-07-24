@@ -8,7 +8,6 @@ Function * FunctionBundle::getBase()
 	}
 	
 	for (Function * function : impls) {
-		std::cout << "checking on " << function->name << std::endl;
 		if (!function->isSpecification()) {
 			return function;
 		}
@@ -66,7 +65,7 @@ void Context::generateFunctionDummies()
 		}
 
 		// Render header
-		out() << "inline " << base->renderHeader() << std::endl << "{" << std::endl;
+		out() << base->renderHeader() << std::endl << "{" << std::endl;
 
 
 		// If length of implementations is greater than 1, then the symbol

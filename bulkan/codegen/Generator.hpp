@@ -28,6 +28,9 @@ class Assert;
 
 class Generator
 {
+private:
+	int increment;
+	
 public:
 	Context context;
 	

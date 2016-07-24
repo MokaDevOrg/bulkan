@@ -66,12 +66,12 @@ void Generator::generate(IdParameter & parameter)
 
 void Generator::generate(NumberParameter & parameter)
 {
-	
+	context.out() << "_" + std::to_string(increment++) + "_";
 }
 
 void Generator::generate(EpsilonParameter & parameter)
 {
-	
+	context.out() << "_" + std::to_string(increment++) + "_";
 }
 
 void Generator::generate(Block & block)
@@ -104,6 +104,10 @@ void Generator::generate(BinaryOp & binaryOp)
 		context.out() << "pow(";
 		binaryOp.left->accept(this);
 		context.out() << ", ";
+	} else if (binaryOp.op == "//") {
+		context.out() << "floor(";
+		binaryOp.left->accept(this);
+		context.out() << " / ";
 	} else {
 		context.out() << "(";
 		binaryOp.left->accept(this);
@@ -256,11 +260,6 @@ void Generator::generate(Log & log)
 
 void Generator::generate(Assert & assert)
 {
-	// if (!expression) {
-	// 		printf(STRING);
-	// 		exit(134);
-	// }
-	
 	context.out() << "if (!";
 	assert.expression->accept(this);
 	context.out() << ") { printf(\"";

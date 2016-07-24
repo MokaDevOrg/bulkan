@@ -1,8 +1,8 @@
 #include <iostream>
 #include <vector>
 
-#include "CodeGeneration/Generator.hpp"
-#include "ast.hpp"
+#include "bulkan/codegen/Generator.hpp"
+#include "bulkan/ast.hpp"
 
 extern int yyparse();
 
@@ -20,7 +20,6 @@ int main(int argc, char **argv)
 	std::cout << std::endl;
 
 	// Function dummies
-	std::cout << "generateFunctionDummies()" << std::endl;
 	generator.context.generateFunctionDummies();
 
 	generator.context.toPrelude();
