@@ -2,18 +2,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-double factorial_0();
+double fib_0(double n);
 
-double factorial_1(double n);
+double fib_1();
+
+double fib_2();
 
 int main();
 
-double factorial(double n)
+double fib(double n)
 {
-    if (n == 0) {
-        return factorial_0();
+    if (n == 1) {
+        return fib_1();
+    } else     if (n == 0) {
+        return fib_2();
     } else {
-        return factorial_1(n);
+        return fib_0(n);
     }
 }
 

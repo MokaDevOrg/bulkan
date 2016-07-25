@@ -1,20 +1,25 @@
 #include "output_prelude.h"
 
-double factorial_0()
+double fib_0(double n)
+{
+    return (fib((n - 2)) + fib((n - 1)));
+}
+
+double fib_1()
 {
     return 1;
 }
 
-double factorial_1(double n)
+double fib_2()
 {
-    return (n * factorial((n - 1)));
+    return 0;
 }
 
 int main()
 {
     double n = 10;
-    double x = factorial(n);
-    printf("%lf! = %lf\n", n, x);
+    double x = fib(n);
+    printf("the %lf-nth fib is: %lf\n", n, x);
     return 0;
 }
 
