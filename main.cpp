@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <fstream>
 
 #include "bulkan/codegen/Generator.hpp"
 #include "bulkan/ast.hpp"
@@ -31,6 +32,28 @@ int main(int argc, char **argv)
 	std::cout << "// body." << std::endl;
 	generator.context.toBody();
 	std::cout << generator.context.out().str();
-		
+
+	std::ofstream prelude;
+	std::ofstream body;
+	
+	// Write to files
+    prelude.open("output/output_prelude.h");
+	body.open("output/output_body.c");
+	
+	generator.context.toPrelude();
+	prelude << "#include <math.h>" << std::endl;
+	prelude << "#include <stdio.h>" << std::endl;
+	prelude << "#include <stdlib.h>" << std::endl;
+	prelude << std::endl;
+	prelude << generator.context.out().str();
+
+	generator.context.toBody();
+	body << "#include \"output_prelude.h\"" << std::endl;
+	body << std::endl;
+	body << generator.context.out().str();
+
+	prelude.close();
+	body.close();
+
 	return 0;
 }

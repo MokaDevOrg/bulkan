@@ -1,0 +1,8 @@
+factorial(0) = 1;
+factorial(n) =
+    n * factorial(n - 1);
+
+main() =
+    let n = 10
+    let x = factorial(n)
+    log '$n! = $x';
