@@ -260,12 +260,30 @@ public:
 		return ss.str();
 	}
 	
-	std::string renderCall()
+	/**
+	* This method renders a call to this function given its
+	* parameters. Note that this is not the wanted behaviour
+	* in some cases, so we can pass base function reference
+	* in order to use its parameters. Also, if base reference
+	* is given, then parameters in same position as specialized
+	* ones are ignored.
+	*
+	* ATTENTION: The latter means ranges are also ignored. A
+	* proposal of binding them to a name has been submited.
+	*/
+	std::string renderCall(Function* base = nullptr)
 	{
+		std::vector<std::shared_ptr<Parameter>>&
+			parameters = (base == nullptr) ? this->parameters : base->parameters;
+
 		std::stringstream ss;
 		ss << realName << "(";
 		
 		for (int i = 0; i < parameters.size(); i++) {
+			if (!this->parameters[i]->isId()) {
+				continue;
+			}
+
 			if (i > 0) {
 				ss << ", ";
 			}

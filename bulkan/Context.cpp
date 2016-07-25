@@ -88,7 +88,7 @@ void Context::generateFunctionDummies()
 				firstSpecialization = false; // do not get confused :D
 				
 				out() 	<< "    if (" << function->getCondition(base) << ") {" << std::endl
-						<< "        return " << function->renderCall() << std::endl << "    } ";
+						<< "        return " << function->renderCall(base) << std::endl << "    } ";
 			}
 			
 			out() << "else {" << std::endl << "    ";

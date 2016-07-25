@@ -24,12 +24,14 @@ void renderFunctionHeader(Generator * generator, Context & context, Function & f
 	context.out() << "(";
 
 	for (int i = 0; i < function.parameters.size(); i++) {
-		if (i > 0) {
-			context.out() << ", ";
-		}
+		if (function.parameters[i]->isId()) {
+			if (i > 0) {
+				context.out() << ", ";
+			}
 
-		context.out() << "double ";
-		function.parameters[i]->accept(generator);
+			context.out() << "double ";
+			function.parameters[i]->accept(generator);
+		}
 	}
 	
 	context.out() << ")";
@@ -66,11 +68,13 @@ void Generator::generate(IdParameter & parameter)
 
 void Generator::generate(NumberParameter & parameter)
 {
+	// Useless, should never be called.
 	context.out() << "_" + std::to_string(increment++) + "_";
 }
 
 void Generator::generate(EpsilonParameter & parameter)
 {
+	// Useless, should never be called.
 	context.out() << "_" + std::to_string(increment++) + "_";
 }
 

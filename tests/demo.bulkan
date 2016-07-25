@@ -6,7 +6,7 @@ fib(n) = fib(n - 2) + fib(n - 1);
 
 someFunc(a, z, c) = 42;
 
-someFunc(f, 98, 32) = 12;
+someFunc(f, 98, s) = 12;
 
 main() = 
 	let n = 5
