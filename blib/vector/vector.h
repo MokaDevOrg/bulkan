@@ -13,9 +13,7 @@
  * vector_add(&vector, 2);
  * vector_add(&vector, 3);
  *
- * double value;
- * int valid = vector_get(&vector, 1, &value); // value = 2
- * assert(valid == 1); // OK
+ * double value = vector_get(&vector, 1); // value = 2
  *
  * //////////////
  *
