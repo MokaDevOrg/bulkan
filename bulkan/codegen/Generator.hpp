@@ -24,6 +24,10 @@ class Assignment;
 class VariableDecl;
 class Log;
 class Assert;
+class ListElement;
+class ListDecl;
+class ListParameter;
+class For;
 
 
 class Generator
@@ -63,4 +67,12 @@ public:
 	void generate(Log & log);
 	
 	void generate(Assert & assert);
+
+	void generate(ListElement & assert);
+
+	void generate(ListDecl & assert);
+
+	void generate(ListParameter & assert);
+
+	void generate(For & assert);
 };

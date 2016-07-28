@@ -1,8 +1,8 @@
-fib(n) = fib(n - 2) + fib(n - 1);
-fib(1) = 1;
-fib(0) = 0;
+fibonacci(n) = fibonacci(n - 2) + fibonacci(n - 1);
+fibonacci(1) = 1;
+fibonacci(0) = 0;
 
-main() = 
+main() =
 	let n = 10
-	let x = fib(n)
-	log 'the $n-nth fib is: $x';
+	let x = fibonacci(n)
+	print 'the $n-nth fibonacci is: $x';

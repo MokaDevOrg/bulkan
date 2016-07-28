@@ -1,0 +1,18 @@
+polynomial(x, coef[], exp[]) =
+    let result = 0
+
+    for i, c : coef do
+        result = result + c * x ^ exp[i];
+
+    result;
+
+pol(x, nil, nil, r) = r;
+
+pol(x, coef[], exp[], r) =
+    tail_polynomial(x, coef[1:], exp[1:], r + coef[0] * x * exp[0]);
+
+polynomial(x, coef[], exp[], r) =
+    assert |coef| == |exp| 'Cardinality of coef and exp has to be equal.'
+    pol(x, coef[1:], exp[1:], 0);
+
+main() = polynomial(10, [1, 0, 3], 0..2);

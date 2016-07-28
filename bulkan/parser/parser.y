@@ -19,11 +19,14 @@ void yyerror(const char * str)
 }
 %}
 
+%error-verbose
+
 %union {
 	Function * function;
 	Parameter * parameter;
 	Statement * statement;
 	Expression * expression;
+	ListId * listId;
 
 	std::vector<std::shared_ptr<Parameter>> * parameterList;
 	std::vector<IdParameter> * idParameterList;
@@ -35,15 +38,16 @@ void yyerror(const char * str)
 }
 
 
-%token LET LOG ASSERT EQUALS PLUS MULT DIV INTDIV MOD EXP SUB PLUS_MINUS
+%token LET PRINT ASSERT EQUALS PLUS MULT DIV INTDIV MOD EXP SUB PLUS_MINUS DO FOR RANGE RANGE_EX
 %token <id> ID STRING
 %token <number> NUMBER
 
 
 %type <function> function
+%type <listId> listId
 %type <parameter> epsilon parameter
-%type <statement> statement assignment lambda variableDecl expressionStatement log assert
-%type <expression> expression functionCall
+%type <statement> statement assignment lambda variableDecl expressionStatement print assert for
+%type <expression> expression functionCall list
 %type <parameterList> parameterList
 %type <statementList> statementList
 %type <expressionList> expressionList
@@ -56,7 +60,7 @@ void yyerror(const char * str)
 %left MULT DIV INTDIV MOD
 %left EXP
 
-%right ID '('
+%right ID '(' '['
 
 %start program
 
@@ -131,8 +135,9 @@ statement:
 	| variableDecl
 	| assignment
 	| expressionStatement
-	| log
+	| print
 	| assert
+	| for
 	;
 
 lambda:
@@ -158,6 +163,14 @@ variableDecl:
 	{
 		$$ = new VariableDecl(*$2, std::shared_ptr<Expression>($4));
 	}
+	| LET listId '=' expression
+	{
+		$$ = new ListDecl(std::shared_ptr<ListId>($2), std::shared_ptr<Expression>($4));
+	}
+	| LET listId
+	{
+		$$ = new ListDecl(std::shared_ptr<ListId>($2));
+	}
 	;
 
 assignment:
@@ -174,12 +187,12 @@ expressionStatement:
 	}
 	;
 
-log:
-	LOG expression
+print:
+	PRINT expression
 	{
 		$$ = new Log(std::shared_ptr<Expression>($2));
 	}
-	| LOG STRING
+	| PRINT STRING
 	{
 		$$ = new Log(*$2);
 	}
@@ -189,6 +202,19 @@ assert:
 	ASSERT expression STRING
 	{
 		$$ = new Assert(std::shared_ptr<Expression>($2), *$3);
+	}
+	;
+
+for:
+	FOR ID ':' expression RANGE expression DO statementList ';'
+	{
+		$$ = new For(*$2, std::shared_ptr<Expression>($4), std::shared_ptr<Expression>($6),
+				Block(*$8, false), true);
+	}
+	| FOR ID ':' expression RANGE_EX expression DO statementList ';'
+	{
+		$$ = new For(*$2, std::shared_ptr<Expression>($4), std::shared_ptr<Expression>($6),
+				Block(*$8, false), false);
 	}
 	;
 
@@ -258,6 +284,11 @@ expression:
 	{
 		$$ = $2;
 	}
+	| listId
+	{
+		$$ = new ListElement(std::shared_ptr<ListId>($1));
+	}
+	| list
 	;
 
 functionCall:
@@ -280,5 +311,19 @@ expressionList:
 	{
 		$$ = new std::vector<std::shared_ptr<Expression>>();
 		$$->push_back(std::shared_ptr<Expression>($1));
+	}
+	;
+
+list:
+	'[' expressionList ']'
+	{
+		
+	}
+	;
+
+listId:
+	ID '[' expressionList ']'
+	{
+		$$ = new ListId(*$1, *$3);
 	}
 	;

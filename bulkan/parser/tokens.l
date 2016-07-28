@@ -18,10 +18,15 @@
 %x S_STRING
 
 %%
+
 let						TOKEN(LET);
-log						TOKEN(LOG);
+for						TOKEN(FOR);
+print					TOKEN(PRINT);
 assert					TOKEN(ASSERT);
-[0-9]+(\.[0-9]*)?      	{ yylval.number = std::stof(yytext); return NUMBER; }
+do						TOKEN(DO);
+[.][.]					TOKEN(RANGE);
+[.]\<					TOKEN(RANGE_EX);
+[0-9]+(\.[0-9]+)?     	{ yylval.number = std::stof(yytext); return NUMBER; }
 [a-zA-Z][a-zA-Z0-9]*   	{ yylval.id = registry.get(yytext, yyleng); return ID; }
 ==						TOKEN(EQUALS);
 !=						TOKEN(NOT_EQUALS);

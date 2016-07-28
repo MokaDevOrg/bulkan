@@ -39,7 +39,7 @@ int main(int argc, char **argv)
 	// Write to files
     prelude.open("output/output_prelude.h");
 	body.open("output/output_body.c");
-	
+
 	generator.context.toPrelude();
 	prelude << "#include <math.h>" << std::endl;
 	prelude << "#include <stdio.h>" << std::endl;

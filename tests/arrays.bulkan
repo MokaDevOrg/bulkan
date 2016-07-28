@@ -1,0 +1,13 @@
+op mod(a, b) = a % b;
+
+list(a[3])[3,3] = [|a|, a];
+list(a[])[] = a;
+
+
+main() =
+    let lista[2]
+    let list[,lista[]] = [[1, 2, 3],]
+    let list2[2]
+    let list[]
+    let n = list[]
+    ;

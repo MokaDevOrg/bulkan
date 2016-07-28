@@ -1,18 +1,3 @@
-# when specialization works propertly, this should calculate the nth fib.
-
-fib(n) = fib(n - 2) + fib(n - 1);
-# fib(1) = 1;
-# fib(0) = 0;
-
-someFunc(a, z, c) = 42;
-
-someFunc(f, 98, s) = 12;
-
 main() = 
-	let n = 5
-	
-	let g = n > 1 == 5 < 2
-	
-	assert g == 1 'expecting 1, got $g instead'
-	
-	log 'the $n-nth fib is: $n';
+	for i : 0..4 do print i;
+	;

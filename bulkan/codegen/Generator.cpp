@@ -78,6 +78,11 @@ void Generator::generate(EpsilonParameter & parameter)
 	context.out() << "_" + std::to_string(increment++) + "_";
 }
 
+void Generator::generate(ListParameter & parameter)
+{
+	context.out() << "_" + std::to_string(increment++) + "_";
+}
+
 void Generator::generate(Block & block)
 {
 	for (int i = 0; i < block.statements.size(); i++) {
@@ -210,6 +215,22 @@ void Generator::generate(VariableDecl & varDecl)
 	varDecl.expression->accept(this);
 }
 
+void Generator::generate(ListDecl & node)
+{
+	context.getScope()->addSymbol(node.id->name, false);
+	
+	context.out() << "struct vector " << node.id->name << "; ";
+	context.out() << "vector_init(&" << node.id->name << ", ";
+	
+	if (node.id->expressionList.size() > 0) {
+		node.id->expressionList[0]->accept(this);
+	} else {
+		context.out() << 0;
+	}
+	
+	context.out() << ", NULL)";
+}
+
 void interpolateString(Context & context, std::string string, int line)
 {
 	std::ostringstream buffer;
@@ -269,4 +290,42 @@ void Generator::generate(Assert & assert)
 	context.out() << ") { printf(\"";
 	interpolateString(context, assert.errorMessage, assert.line);
 	context.out() << "); exit(134); }";
+}
+
+void Generator::generate(ListElement & node)
+{
+	context.getScope()->assertSymbol(node.id->name, node.line);
+
+	for (auto i : node.id->expressionList) {
+		context.out() << "vector_get(&" << node.id->name << ", ";
+		i->accept(this);
+		context.out() << ")";
+	}
+}
+
+void Generator::generate(For & node)
+{
+	context.getScope()->addSymbol(node.variable, node.line);
+
+	context.createScope(true);
+	
+	context.out() << "for (int " << node.variable << " = (int) ";
+	node.lower->accept(this);
+	context.out() << "; " << node.variable << " ";
+	
+	if (node.inclusive) {
+		context.out() << "<=";
+	} else {
+		context.out() << "<";
+	}
+	
+	context.out() << " (int) ";
+	node.upper->accept(this);
+	context.out() << "; " << node.variable << "++) {" << std::endl;
+	
+	node.block.accept(this);
+	
+	context.out() << "}";
+	
+	context.popScope();
 }

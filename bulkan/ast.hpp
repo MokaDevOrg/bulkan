@@ -11,6 +11,12 @@ typedef double NUMBER_T;
 
 extern size_t yyline;
 
+class Expression;
+class Statement;
+
+typedef std::vector<std::shared_ptr<Expression>> ExpressionList;
+typedef std::vector<std::shared_ptr<Statement>> StatementList;
+
 
 class Parameter {
 public:
@@ -49,13 +55,23 @@ public:
 	virtual void accept(Generator * generator) {}
 };
 
+class ListId
+{
+public:
+	std::string name;
+	ExpressionList expressionList;
+
+	ListId(std::string name, ExpressionList expressionList) : 
+		name(name), expressionList(expressionList) {}
+};
+
 class Block
 {
 public:
 	std::vector<std::shared_ptr<Statement>> statements;
 	bool topLevel = false;
 	bool inMain = false;
-	
+
 	size_t line = yyline;
 
 	Block(std::vector<std::shared_ptr<Statement>> statements, bool topLevel) :
@@ -137,6 +153,29 @@ public:
 		std::stringstream ss;
 		ss << value << " +- " << epsilon;
 		return ss.str();
+	}
+
+	void accept(Generator * generator)
+	{
+		generator->generate(*this);
+	}
+};
+
+class ListParameter : public Parameter
+{
+public:
+	std::shared_ptr<ListId> id;
+
+	ListParameter(std::shared_ptr<ListId> id) : id(id) {}
+
+	std::string getCondition(std::string id)
+	{
+		return "";
+	}
+
+	std::string render()
+	{
+		return "";
 	}
 
 	void accept(Generator * generator)
@@ -332,6 +371,23 @@ public:
 	}
 };
 
+class ListDecl : public Statement
+{
+public:
+	std::shared_ptr<ListId> id;
+	std::shared_ptr<Expression> expression;
+	
+	ListDecl(std::shared_ptr<ListId> id, std::shared_ptr<Expression> expression) :
+		id(id), expression(expression) {}
+		
+	ListDecl(std::shared_ptr<ListId> id) : ListDecl(id, nullptr) {}
+
+	void accept(Generator * generator)
+	{
+		generator->generate(*this);
+	}
+};
+
 class Assignment : public Statement
 {
 public:
@@ -395,6 +451,25 @@ public:
 	}
 };
 
+class For : public Statement
+{
+public:
+	std::string variable;
+	std::shared_ptr<Expression> lower;
+	std::shared_ptr<Expression> upper;
+	Block block;
+	bool inclusive;
+
+	For(std::string variable, std::shared_ptr<Expression> lower, std::shared_ptr<Expression> upper,
+			Block block, bool inclusive) :
+		variable(variable), lower(lower), upper(upper), block(block), inclusive(inclusive) {}
+
+	void accept(Generator * generator)
+	{
+		generator->generate(*this);
+	}
+};
+
 
 class Number : public Expression
 {
@@ -449,6 +524,19 @@ public:
 
 	BinaryOp(std::shared_ptr<Expression> left, std::string op, std::shared_ptr<Expression> right) :
 		left(left), op(op), right(right) {}
+
+	void accept(Generator * generator)
+	{
+		generator->generate(*this);
+	}
+};
+
+class ListElement : public Expression
+{
+public:
+	std::shared_ptr<ListId> id;
+	
+	ListElement(std::shared_ptr<ListId> id) : id(id) {}
 
 	void accept(Generator * generator)
 	{
